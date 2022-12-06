@@ -14,7 +14,7 @@ import javafx.scene.text.TextAlignment;
  * @author shsmchlr
  *  Class to handle a canvas, used by different GUIs
  */
-public class MyCanvas implements Serializable {
+public class MyCanvas {
 	int xCanvasSize = 500;				// constants for relevant sizes
 	int yCanvasSize = 1000;
     GraphicsContext gc; 

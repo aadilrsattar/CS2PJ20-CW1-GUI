@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author shsmchlr
  *
  */
-public abstract class Drone implements Serializable {
+public abstract class Drone {
 	protected double x, y, rad;						// position and size of ball
 	protected char type;								// used to set colour
 	static int ballCounter = 0;						// used to give each ball a unique identifier

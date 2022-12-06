@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author shsmchlr
  * The Target Ball which you are aiming at
  */
-public class PreyDrone extends Drone implements Serializable {
+public class PreyDrone extends Drone{
 	
 	private int score;
 	double bAngle, bSpeed;

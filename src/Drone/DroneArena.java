@@ -97,9 +97,10 @@ public class DroneArena implements Serializable {
 			// if Drone hit (tried to go through) left or right walls, set mirror angle, being 180-angle
 			if (y < rad || y > ySize - rad) ans = -ans;
 			// if try to go off top or bottom, set mirror angle
-		
+			
 			for (Drone b : allBalls) 
-				if (b.getID() != notID && b.hitting(x, y, rad)) ans = 180*Math.atan2(y-b.getY(), x-b.getX())/Math.PI;
+				if (b.getID() != notID && b.hitting(x, y, rad)) {ans = 180*Math.atan2(y-b.getY(), x-b.getX())/Math.PI;bool=false;}
+					
 					// check all balls except one with given id
 					// if hitting, return angle between the other Drone and this one.
 					// return the angle

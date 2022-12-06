@@ -12,6 +12,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.filechooser.FileFilter;
 
 import javafx.animation.AnimationTimer;
@@ -40,12 +41,15 @@ import javafx.stage.Stage;
  * @author shsmchlr
  * Example with balls, paddles and targets in arena
  */
+
 public class DroneInterface extends Application {
 	private MyCanvas mc;
 	private AnimationTimer timer;								// timer used for animation
 	private VBox rtPane;										// vertical box for putting info
 	private DroneArena arena;
 	private JFileChooser chooser;
+	private int xSize=500;
+	private int ySize=600;
 	
 	public DroneInterface() {
     	chooser=new JFileChooser("/");
@@ -54,6 +58,7 @@ public class DroneInterface extends Application {
     		public boolean accept(File f) {
     		if (f.getAbsolutePath().endsWith(".lom")) return true;
     		if (f.isDirectory()) return true;
+    		
     		return false;
     		}
     		public String getDescription() {
@@ -229,7 +234,9 @@ public class DroneInterface extends Application {
 					int returnVal = chooser.showOpenDialog(null);
 	            	if (returnVal == JFileChooser.APPROVE_OPTION) {
 	            		File selFile = chooser.getSelectedFile();
+	            		
 	            		try {
+	            			
 	            			FileInputStream FileInput = new FileInputStream(selFile);
 	            			ObjectInputStream res = new ObjectInputStream(FileInput);
 	            			arena=(DroneArena)res.readObject();
@@ -256,15 +263,15 @@ public class DroneInterface extends Application {
 	    bp.setTop(setMenu());											// put menu at the top
 
 	    Group root = new Group();										// create group with canvas
-	    Canvas canvas = new Canvas( 400, 500 );
+	    Canvas canvas = new Canvas( xSize, ySize );
 	    root.getChildren().add( canvas );
 	    bp.setLeft(root);												// load canvas to left area
 	
-	    mc = new MyCanvas(canvas.getGraphicsContext2D(), 400, 500);
+	    mc = new MyCanvas(canvas.getGraphicsContext2D(), xSize, ySize);
 
 	    setMouseEvents(canvas);											// set up mouse events
 
-	    arena = new DroneArena(400, 500);								// set up arena
+	    arena = new DroneArena(xSize, ySize);								// set up arena
 	    drawWorld();
 	    
 	    timer = new AnimationTimer() {									// set up timer
@@ -283,7 +290,7 @@ public class DroneInterface extends Application {
 		  
 	    bp.setBottom(setButtons());										// set bottom pane with buttons
 
-	    Scene scene = new Scene(bp, 700, 600);							// set overall scene
+	    Scene scene = new Scene(bp, xSize*1.5, ySize*1.2);							// set overall scene
         bp.prefHeightProperty().bind(scene.heightProperty());
         bp.prefWidthProperty().bind(scene.widthProperty());
 
@@ -292,6 +299,9 @@ public class DroneInterface extends Application {
 	  
 
 	}
+	
+
+
 
 	/**
 	 * @param args

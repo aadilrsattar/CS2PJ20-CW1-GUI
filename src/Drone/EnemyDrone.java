@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author shsmchlr
  *
  */
-public class EnemyDrone extends Drone implements Serializable {
+public class EnemyDrone extends Drone {
 
 	double bAngle, bSpeed;			// angle and speed of travel
 	/**
