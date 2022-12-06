@@ -1,9 +1,12 @@
 package Drone;
 
+import java.io.Serializable;
+
 import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.ArcType;
 import javafx.scene.text.TextAlignment;
 
@@ -11,10 +14,11 @@ import javafx.scene.text.TextAlignment;
  * @author shsmchlr
  *  Class to handle a canvas, used by different GUIs
  */
-public class MyCanvas {
-	int xCanvasSize = 512;				// constants for relevant sizes
-	int yCanvasSize = 512;
+public class MyCanvas implements Serializable {
+	int xCanvasSize = 500;				// constants for relevant sizes
+	int yCanvasSize = 1000;
     GraphicsContext gc; 
+    private final Image droneIMG, toyHeliIMG, objectIMG;
 
     /**
      * onstructor sets up relevant Graphics context and size of canvas
@@ -25,6 +29,9 @@ public class MyCanvas {
     	gc = g;
     	xCanvasSize = xcs;
     	yCanvasSize = ycs;
+    	droneIMG = new Image("https://images.vexels.com/media/users/3/215129/isolated/lists/f98ff00414055616a9675d5d4aed6a9d-quadcopter-drone-top-view-stroke-icon.png");
+        toyHeliIMG = new Image("https://cdn.iconscout.com/icon/premium/png-256-thumb/helicopter-4209758-3487458.png");
+        objectIMG = new Image("https://www.iconsdb.com/icons/download/red/square-48.png");
     }
     /**
      * get size in x of canvas
@@ -62,45 +69,30 @@ public class MyCanvas {
 	}
 
 	
-	/** 
-	 * function to convert char c to actual colour used
-	 * @param c
-	 * @return Color
-	 */
-	Color colFromChar (char c){
-		Color ans = Color.BLACK;
-		switch (c) {
-		case 'y' :	ans = Color.YELLOW;
-					break;
-		case 'w' :	ans = Color.WHITE;
-					break;
-		case 'r' :	ans = Color.RED;
-					break;
-		case 'g' :	ans = Color.GREEN;
-					break;
-		case 'b' :	ans = Color.BLUE;
-					break;
-		case 'o' :	ans = Color.ORANGE;
-					break;
-		}
-		return ans;
-	}
-	
-	public void setFillColour (Color c) {
-		gc.setFill(c);
-	}
 	/**
-	 * show the ball at position x,y , radius r in colour defined by col
+	 * show the ball at position x,y , radius r 
 	 * @param x
 	 * @param y
 	 * @param rad
 	 * @param col
 	 */
-	public void showCircle(double x, double y, double rad, char col) {
-	 	setFillColour(colFromChar(col));									// set the fill colour
-		gc.fillArc(x-rad, y-rad, rad*2, rad*2, 0, 360, ArcType.ROUND);	// fill circle
-	}
+    public void showCircle(double x, double y, double rad, char type) {
+    	
+    	if (type=='e') {
+    		Image img = droneIMG;
+    		gc.setFill(new ImagePattern(img)); 
+    	}
+    	else if (type=='p') {
+    		Image img = toyHeliIMG;
+    		gc.setFill(new ImagePattern(img)); 
+    	}
+    	else if (type=='o') {
+    		Image img = objectIMG;
+    		gc.setFill(new ImagePattern(img)); 
+    	}
 
+        showCircle(x, y, rad);                        // show the circle
+    }
 	/**
 	 * show circle in current colour atx,y size rad
 	 * @param x
@@ -134,4 +126,3 @@ public class MyCanvas {
 		showText (x, y, Integer.toString(i));
 	}	
 }
-

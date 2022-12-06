@@ -1,17 +1,52 @@
+/**
+ * 
+ */
 package Drone;
 
-import javax.swing.*;
-import java.io.*;
-import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
 
-public class DroneInterface {
-    private Scanner s;                    		
-    private DroneArena myArena;                	
-    private JFileChooser chooser;
-    
-    @SuppressWarnings({ "unused", "resource" })
+import javafx.animation.AnimationTimer;
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+/**
+ * @author shsmchlr
+ * Example with balls, paddles and targets in arena
+ */
+public class DroneInterface extends Application {
+	private MyCanvas mc;
+	private AnimationTimer timer;								// timer used for animation
+	private VBox rtPane;										// vertical box for putting info
+	private DroneArena arena;
+	private JFileChooser chooser;
+	
 	public DroneInterface() {
     	chooser=new JFileChooser("/");
     	FileFilter filter = new FileFilter() {
@@ -25,182 +60,236 @@ public class DroneInterface {
     		return "lom";
     		}
     	};
-    	
-        s = new Scanner(System.in);                	
-        myArena = new DroneArena(0, 0);
-        
-        int xInput = 0;
-        int yInput = 0;
+	}
+	
+	/**
+	 * function to show in a box ABout the programme
+	 */
+	private void showAbout() {
+	    Alert alert = new Alert(AlertType.INFORMATION);				// define what box is
+	    alert.setTitle("About");									// say is About
+	    alert.setHeaderText(null);
+	    alert.setContentText("RJM's JavaFX Demonstrator");			// give text
+	    alert.showAndWait();										// show box and wait for user to close
+	}
 
-        char ch = ' ';
-        do {
-        	System.out.print("Enter (A)dd drone, get (I)nformation, (D)isplay arena, create (N)ew arena,\n(M)ove drones one space, move drones (T)en times, (S)ave arena, (L)oad arena or e(X)it > ");
-            ch = s.next().charAt(0);
-            s.nextLine();
-            switch (ch) {
-            
-                case 'A':
-                case 'a':
-                    if (myArena.getArenaHeight() == 0 || myArena.getArenaWidth() == 0) {
-                        System.out.println("Create an arena before adding drone \n");
-                    } 
-                    else {
-                        myArena.addDrone();
-                        System.out.println("\nDrone added. Total number of drones in arena = " + myArena.numofDrones()+"\n");
-                    }
-                    break;
-                    
-                case 'I':
-                case 'i':
-                    if (myArena.getArenaHeight() == 0 || myArena.getArenaWidth() == 0) {
-                        System.out.println("No arena, please create one before proceeding.\n");
-                    } 
-                    else if (myArena.numDrone.isEmpty() == true) {
-                        System.out.println("Warning! Please insert drones to move!");
-                        System.out.println("\nArena dimensions: " + xInput + " by " + yInput + ".");
-                    } 
-                    else {
-                        System.out.print("\n" + myArena.toString() + "\n");
-                    }
-                    break;
-                    
-                case 'd':
-                case 'D':
-                    if (myArena.getArenaHeight() == 0 || myArena.getArenaWidth() == 0) {
-                        System.out.println("No arena, please create one before proceeding.\n");
-                    } 
-                    else {
-                        System.out.println("\n");
-                        doDisplay();
-                    }
-                    break;
-                    
-                case 'm':
-                case 'M':
-                    if (xInput == 0 || yInput == 0) {
-                        System.out.println("No arena, please create one before proceeding.\n");
-                    } 
-                    else {
-                        if (!myArena.numDrone.isEmpty()) {
-                            System.out.println("\n");
-                            myArena.moveAllDrones(myArena);
-                            doDisplay();
-                        } 
-                        else {
-                            System.out.println("Warning! Please insert drones to move!\n");
-                        }
-                    }
-                    break;
-                    
-                case 't':
-                case 'T':
-                    if (myArena.getArenaHeight() == 0 || myArena.getArenaWidth() == 0) {
-                        System.out.println("No arena, please create one before proceeding.\n");
-                    } 
-                    else {
-                        if (!myArena.numDrone.isEmpty()) {
-                            for (int i = 0; i < 10; i++) {
-                                myArena.moveAllDrones(myArena);
-                                doDisplay();
-                                try {
-                                    TimeUnit.MILLISECONDS.sleep(100); 
-                                } catch (InterruptedException e) {
-                                    System.out.format("IOException: %s%n", e);
-                                }
-                            }
-                        } 
-                        else {
-                            System.out.println("Warning! Please insert drones to move!\n");
-                        }
-                    }
-                    break;
-                    
-                case 'n':
-                case 'N':
-                    System.out.print("\n Input arena dimensions: ");
-                    System.out.print(" X = ");
-                    try {
-                        xInput = s.nextInt();
-                        while (xInput < 0) {
-                            System.out.println("Please input a postive number. ");
-                            System.out.println("X = ");
-                            xInput = s.nextInt();
-                        }
-                    } catch (Exception a) {
-                        System.out.println("Invalid Number");
-                        System.out.print("\n X = ");
-                        s.nextLine();
-                        xInput = s.nextInt();
-                    }
-                    System.out.print(" Y = ");
-                    try {
-                        yInput = s.nextInt();
-                        while (yInput < 0) {
-                            System.out.println("Please input a postive number. ");
-                            System.out.print("\n\nY = ");
-                            yInput = s.nextInt();
-                        }
-                    } catch (Exception b) {
-                        System.out.println("Invalid Number.");
-                        System.out.print("Y = ");
-                        s.nextLine();
-                        yInput = s.nextInt();
-                    }
-                    myArena = new DroneArena(xInput, yInput);
-                    System.out.println("Arena created! Dimensions: " + xInput + " by " + yInput + ".");
-                    break;
-                    
-                case 's':
-                case 'S':
-                    if (myArena.getArenaHeight() == 0 || myArena.getArenaWidth() == 0) {
-                        System.out.println("No arena, please create one before proceeding.\n");
-                    } 
-                    else {
-                    	int returnVal = chooser.showSaveDialog(null);
-                    	if (returnVal == JFileChooser.APPROVE_OPTION) {
-                    		File selFile = chooser.getSelectedFile();
-                			try {
-								FileOutputStream FileInput = new FileOutputStream(selFile);
-								ObjectOutputStream res = new ObjectOutputStream(FileInput);
-								res.writeObject(myArena);
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
+	 /**
+	  * set up the mouse event - when mouse pressed, put ball there
+	  * @param canvas
+	  */
+	void setMouseEvents (Canvas canvas) {
+	       canvas.addEventHandler(MouseEvent.MOUSE_PRESSED, 		// for MOUSE PRESSED event
+	    	       new EventHandler<MouseEvent>() {
+	    	           @Override
+	    	           public void handle(MouseEvent e) {
+	  		            	drawWorld();							// redraw world
+	  		            	drawStatus();
+	    	           }
+	    	       });
+	}
+	/**
+	 * set up the menu of commands for the GUI
+	 * @return the menu bar
+	 */
+	MenuBar setMenu() {
+		
+		MenuBar menuBar = new MenuBar();						// create main menu
+	
+		Menu mFile = new Menu("File");							// add File main menu
+		
+		MenuItem mSave = new MenuItem("Save");					// whose sub menu has Exit
+		
+		mSave.setOnAction(new EventHandler<ActionEvent>() {
+		    public void handle(ActionEvent s) {
+		    	saveArena();
+		    }
+		    });
+		
+		MenuItem mLoad = new MenuItem("Load");					// whose sub menu has Exit
+		mLoad.setOnAction(new EventHandler<ActionEvent>() {
+		    public void handle(ActionEvent s) {					// action on exit is
+		    	int returnVal = chooser.showOpenDialog(null);
+            	if (returnVal == JFileChooser.APPROVE_OPTION) {
+            		File selFile = chooser.getSelectedFile();
+            		try {
+            			FileInputStream FileInput = new FileInputStream(selFile);
+            			ObjectInputStream res = new ObjectInputStream(FileInput);
+            			arena=(DroneArena)res.readObject();
+            		} catch (Exception e) {
+            			System.out.print(" ");
+            		}
+            	}
 
-                    	}
-                    }
-                    break;
-                    
-                case 'l':
-                case 'L':
-                	int returnVal = chooser.showOpenDialog(null);
-                	if (returnVal == JFileChooser.APPROVE_OPTION) {
-                		File selFile = chooser.getSelectedFile();
-                		try {
-                			FileInputStream FileInput = new FileInputStream(selFile);
-                			ObjectInputStream res = new ObjectInputStream(FileInput);
-                			myArena=(DroneArena)res.readObject();
-                		} catch (Exception e) {
-                			System.out.print(" ");
-                		}
-                	}
+		    }
+		});
+		
+		MenuItem mExit = new MenuItem("Exit");					// whose sub menu has Exit
+		mExit.setOnAction(new EventHandler<ActionEvent>() {
+		    public void handle(ActionEvent t) {					// action on exit is
+	        	timer.stop();									// stop timer
+		        System.exit(0);									// exit program
+		    }
+		});
+		mFile.getItems().addAll(mSave, mLoad, mExit);							// add exit to File menu
+		
+		Menu mHelp = new Menu("Help");							// create Help menu
+		MenuItem mAbout = new MenuItem("About");				// add About sub men item
+		mAbout.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+            	showAbout();									// and its action to print about
+            }	
+		});
+		mHelp.getItems().addAll(mAbout);						// add About to Help main item
+		
+		menuBar.getMenus().addAll(mFile, mHelp);				// set main menu with File, Help
+		return menuBar;											// return the menu
+	}
 
-                    break;
-            }
-        } while (ch != 'X');                       
+	/**
+	 * set up the horizontal box for the bottom with relevant buttons
+	 * @return
+	 */
+	private HBox setButtons() {
+	    Button btnStart = new Button("Start");					// create button for starting
+	    btnStart.setOnAction(new EventHandler<ActionEvent>() {	// now define event when it is pressed
+	        @Override
+	        public void handle(ActionEvent event) {
+	        	timer.start();									// its action is to start the timer
+	       }
+	    });
 
-        s.close();                                   
-    }
+	    Button btnStop = new Button("Pause");					// now button for stop
+	    btnStop.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override
+	        public void handle(ActionEvent event) {
+	           	timer.stop();									// and its action to stop the timer
+	       }
+	    });
 
-    void doDisplay() {
-        ConsoleCanvas field = new ConsoleCanvas(myArena.getArenaWidth() + 2, myArena.getArenaHeight() + 2);
-        myArena.showDrones(field);
-        System.out.println(field.toString());
-    }
+	    Button btnEAdd = new Button("New Enemy Drone");				// now button for stop
+	    btnEAdd.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override
+	        public void handle(ActionEvent event) {
+	           	arena.addEnemyDrone();								// and its action to stop the timer
+	           	drawWorld();
+	       }
+	    });
+	    Button btnPAdd = new Button("New Prey Drone");				// now button for stop
+	    btnPAdd.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override
+	        public void handle(ActionEvent event) {
+	           	arena.addPreyDrone();								// and its action to stop the timer
+	           	drawWorld();
+	       }
+	    });
+	    														// now add these buttons + labels to a HBox
+	    return new HBox(new Label("Run: "), btnStart, btnStop, new Label("Add: "), btnEAdd, btnPAdd);
+	}
 
+	/**
+	 * Show the score .. by writing it at position x,y
+	 * @param x
+	 * @param y
+	 * @param score
+	 */
+	public void showScore (double x, double y, int score) {
+		mc.showText(x, y, Integer.toString(score));
+	}
+	/** 
+	 * draw the world with ball in it
+	 */
+	public void drawWorld () {
+	 	mc.clearCanvas();						// set beige colour
+	 	arena.drawArena(mc);
+	}
+	
+	/**
+	 * show where ball is, in pane on right
+	 */
+	public void drawStatus() {
+		rtPane.getChildren().clear();					// clear rtpane
+		ArrayList<String> allBs = arena.describeAll();
+		for (String s : allBs) {
+			Label l = new Label(s); 		// turn description into a label
+			rtPane.getChildren().add(l);	// add label	
+		}	
+	}
+	
+	private void saveArena() {
+		Thread t1 = new Thread(new Runnable() {
+				public void run() {
+					int returnVal = chooser.showSaveDialog(null);
+					if (returnVal == JFileChooser.APPROVE_OPTION) {
+						File selFile = chooser.getSelectedFile();
+						try {
+							FileOutputStream FileInput = new FileOutputStream(selFile);
+							ObjectOutputStream res = new ObjectOutputStream(FileInput);
+							res.writeObject(arena);
+							} catch (IOException e) {e.printStackTrace();}	
+						}
 
-    @SuppressWarnings("unused")
+				}
+		});
+		t1.start();
+	}
+
+	/* (non-Javadoc)
+	 * @see javafx.application.Application#start(javafx.stage.Stage)
+	 */
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		// TODO Auto-generated method stub
+		primaryStage.setTitle("RJMs attempt at Moving my Balls");
+	    BorderPane bp = new BorderPane();
+	    bp.setPadding(new Insets(10, 20, 10, 20));
+
+	    bp.setTop(setMenu());											// put menu at the top
+
+	    Group root = new Group();										// create group with canvas
+	    Canvas canvas = new Canvas( 400, 500 );
+	    root.getChildren().add( canvas );
+	    bp.setLeft(root);												// load canvas to left area
+	
+	    mc = new MyCanvas(canvas.getGraphicsContext2D(), 400, 500);
+
+	    setMouseEvents(canvas);											// set up mouse events
+
+	    arena = new DroneArena(400, 500);								// set up arena
+	    drawWorld();
+	    
+	    timer = new AnimationTimer() {									// set up timer
+	        public void handle(long currentNanoTime) {					// and its action when on
+	        		arena.checkBalls();									// check the angle of all balls
+		            arena.adjustBalls();								// move all balls
+		            drawWorld();										// redraw the world
+		            drawStatus();										// indicate where balls are
+	        }
+	    };
+
+	    rtPane = new VBox();											// set vBox on right to list items
+		rtPane.setAlignment(Pos.TOP_LEFT);								// set alignment
+		rtPane.setPadding(new Insets(5, 75, 75, 5));					// padding
+ 		bp.setRight(rtPane);											// add rtPane to borderpane right
+		  
+	    bp.setBottom(setButtons());										// set bottom pane with buttons
+
+	    Scene scene = new Scene(bp, 700, 600);							// set overall scene
+        bp.prefHeightProperty().bind(scene.heightProperty());
+        bp.prefWidthProperty().bind(scene.widthProperty());
+
+        primaryStage.setScene(scene);
+        primaryStage.show();
+	  
+
+	}
+
+	/**
+	 * @param args
+	 */
 	public static void main(String[] args) {
-        DroneInterface r = new DroneInterface();    
-    }
+	    Application.launch(args);			// launch the GUI
+
+	}
+
 }
