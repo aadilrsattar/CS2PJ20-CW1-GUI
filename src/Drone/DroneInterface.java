@@ -108,17 +108,7 @@ public class DroneInterface extends Application {
 		MenuItem mLoad = new MenuItem("Load");					// whose sub menu has Exit
 		mLoad.setOnAction(new EventHandler<ActionEvent>() {
 		    public void handle(ActionEvent s) {					// action on exit is
-		    	int returnVal = chooser.showOpenDialog(null);
-            	if (returnVal == JFileChooser.APPROVE_OPTION) {
-            		File selFile = chooser.getSelectedFile();
-            		try {
-            			FileInputStream FileInput = new FileInputStream(selFile);
-            			ObjectInputStream res = new ObjectInputStream(FileInput);
-            			arena=(DroneArena)res.readObject();
-            		} catch (Exception e) {
-            			System.out.print(" ");
-            		}
-            	}
+		    	loadArena();
 
 		    }
 		});
@@ -233,6 +223,25 @@ public class DroneInterface extends Application {
 		});
 		t1.start();
 	}
+	private void loadArena() {
+		Thread t2 = new Thread(new Runnable() {
+				public void run() {
+					int returnVal = chooser.showOpenDialog(null);
+	            	if (returnVal == JFileChooser.APPROVE_OPTION) {
+	            		File selFile = chooser.getSelectedFile();
+	            		try {
+	            			FileInputStream FileInput = new FileInputStream(selFile);
+	            			ObjectInputStream res = new ObjectInputStream(FileInput);
+	            			arena=(DroneArena)res.readObject();
+	            		} catch (Exception e) {
+	            			System.out.print(" ");
+	            		}
+	            	}
+				}
+		});
+		t2.start();
+	}
+	
 
 	/* (non-Javadoc)
 	 * @see javafx.application.Application#start(javafx.stage.Stage)
