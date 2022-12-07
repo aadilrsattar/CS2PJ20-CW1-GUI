@@ -46,8 +46,8 @@ public class DroneInterface extends Application {
 	private VBox rtPane;										// vertical box for putting info
 	private DroneArena arena;
 	private JFileChooser chooser;
-	private int xSize=500;
-	private int ySize=600;
+	private static int xSize=500;
+	private static int ySize=600;
 	public static double SPEEDmult=1;
 	
 	public DroneInterface() {
@@ -285,15 +285,15 @@ public class DroneInterface extends Application {
 	    bp.setTop(setMenu());											// put menu at the top
 
 	    Group root = new Group();										// create group with canvas
-	    Canvas canvas = new Canvas( xSize, ySize );
+	    Canvas canvas = new Canvas( getxSize(), ySize );
 	    root.getChildren().add( canvas );
 	    bp.setLeft(root);												// load canvas to left area
 	
-	    mc = new MyCanvas(canvas.getGraphicsContext2D(), xSize, ySize);
+	    mc = new MyCanvas(canvas.getGraphicsContext2D(), getxSize(), ySize);
 
 	    setMouseEvents(canvas);											// set up mouse events
 
-	    arena = new DroneArena(xSize, ySize);								// set up arena
+	    arena = new DroneArena(getxSize(), ySize);								// set up arena
 	    drawWorld();
 	    
 	    timer = new AnimationTimer() {									// set up timer
@@ -312,7 +312,7 @@ public class DroneInterface extends Application {
 		  
 	    bp.setBottom(setButtons());										// set bottom pane with buttons
 
-	    Scene scene = new Scene(bp, xSize*1.5, ySize*1.2);							// set overall scene
+	    Scene scene = new Scene(bp, getxSize()*1.5, ySize*1.2);							// set overall scene
         bp.prefHeightProperty().bind(scene.heightProperty());
         bp.prefWidthProperty().bind(scene.widthProperty());
 
@@ -332,5 +332,14 @@ public class DroneInterface extends Application {
 	    Application.launch(args);			// launch the GUI
 
 	}
+
+	public static int getxSize() {
+		return xSize;
+	}
+	
+	public static int getySize() {
+		return ySize;
+	}
+
 
 }

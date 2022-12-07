@@ -36,8 +36,9 @@ public class DroneArena implements Serializable {
 		xSize = xS;
 		ySize = yS;
 		allBalls = new ArrayList<Drone>();					// list of all balls, initially empty
-		allBalls.add(new EnemyDrone(xS/2, yS/2, 25, 20, 10));	// add game Drone
-		allBalls.add(new PreyDrone(xS/2, 30, 20, 20, 15));			// add target Drone
+		addEnemyDrone();	// add game Drone
+		addPreyDrone();			// add target Drone
+		addObject();
 	}
 	/**
 	 * return arena size in x direction

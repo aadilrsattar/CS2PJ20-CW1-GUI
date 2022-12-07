@@ -47,8 +47,17 @@ public class EnemyDrone extends Drone {
 	@Override
 	protected void adjustBall() {
 		double radAngle = bAngle*Math.PI/180;		// put angle in radians
-		x += bSpeed * Math.cos(radAngle) * DroneInterface.SPEEDmult;		// new X position
-		y += bSpeed * Math.sin(radAngle) * DroneInterface.SPEEDmult;		// new Y position
+		
+		if (x<=0+rad) x=x+rad;
+		if (x>DroneInterface.getxSize()) x=x-rad;
+		
+		if (y<=0+rad) y=y+rad;
+		if (y>DroneInterface.getySize()) y=y-rad;
+		
+		else {
+				x += bSpeed * Math.cos(radAngle) * DroneInterface.SPEEDmult;		// new X position
+				y += bSpeed * Math.sin(radAngle) * DroneInterface.SPEEDmult;		// new Y position
+		}
 	}
 	/**
 	 * return string defining Drone type
