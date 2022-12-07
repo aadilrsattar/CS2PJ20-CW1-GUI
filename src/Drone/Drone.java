@@ -14,7 +14,8 @@ public abstract class Drone {
 	protected char type;								// used to set colour
 	static int ballCounter = 0;						// used to give each ball a unique identifier
 	protected int ballID;							// unique identifier for item
-
+	public boolean toRemove=false;
+	
 	Drone(){};
 	/**
 	 * construct a ball of radius ir at ix,iy

@@ -62,7 +62,12 @@ public class DroneArena implements Serializable {
 	 * check all balls .. see if need to change angle of moving balls, etc 
 	 */
 	public void checkBalls() {
-		for (Drone b : allBalls) b.checkBall(this);	// check all balls
+		for (int i=0;i<allBalls.size();i++) {
+			allBalls.get(i).checkBall(this);
+			if (allBalls.get(i).toRemove) {
+				allBalls.remove(i);
+			}
+		}
 	}
 	/**
 	 * adjust all balls .. move any moving ones
@@ -89,7 +94,7 @@ public class DroneArena implements Serializable {
 	 * @param notID			identify of Drone not to be checked
 	 * @return				new angle 
 	 */
-	public double CheckBallAngle(double x, double y, double rad, double ang, int notID) {
+	public double CheckBallAngle(double x, double y, double rad, double ang, int notID, Drone edo) {
 		boolean bool=true;
 		double ans = ang;
 		while(bool){
@@ -99,8 +104,13 @@ public class DroneArena implements Serializable {
 			// if try to go off top or bottom, set mirror angle
 			
 			for (Drone b : allBalls) 
-				if (b.getID() != notID && b.hitting(x, y, rad)) {ans = 180*Math.atan2(y-b.getY(), x-b.getX())/Math.PI;bool=false;}
-					
+				if (b.getID() != notID && b.hitting(x, y, rad)) {
+					ans = 180*Math.atan2(y-b.getY(), x-b.getX())/Math.PI;
+					if (b.getClass()==EnemyDrone.class && edo.getClass()==PreyDrone.class) {
+						edo.toRemove=true;
+					}
+					bool=false;
+				}
 					// check all balls except one with given id
 					// if hitting, return angle between the other Drone and this one.
 					// return the angle
@@ -159,9 +169,32 @@ public class DroneArena implements Serializable {
 			else if (y < r || y > ySize - r);
 			else {
 				for (Drone b : allBalls) {
-					if (b.hitting(x, y, 30));
+					if (b.hitting(x, y, 20));
 					else {
 						allBalls.add(new PreyDrone(x, y, 20, 45, 10));
+						bool=false;
+						break;
+					}
+				}
+			}
+		}
+	}
+	
+	public void addObject() {
+		randomGenerator = new Random(); 
+		
+		boolean bool=true;
+		while(bool) {
+			double x = randomGenerator.nextInt(xSize);
+			double y = randomGenerator.nextInt(ySize);
+			double r = 20;
+			if (x < r || x > xSize - r);
+			else if (y < r || y > ySize - r);
+			else {
+				for (Drone b : allBalls) {
+					if (b.hitting(x, y, 20));
+					else {
+						allBalls.add(new Object(x, y, 20));
 						bool=false;
 						break;
 					}

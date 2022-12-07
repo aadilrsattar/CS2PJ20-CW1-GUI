@@ -29,7 +29,7 @@ public class EnemyDrone extends Drone {
 	public EnemyDrone(double ix, double iy, double ir, double ia, double is) {
 		super(ix, iy, ir);
 		bAngle = ia;
-		bSpeed = is;
+		bSpeed= is;
 	}
 
 	/**
@@ -38,7 +38,7 @@ public class EnemyDrone extends Drone {
 	 */
 	@Override
 	protected void checkBall(DroneArena b) {
-		bAngle = b.CheckBallAngle(x, y, rad, bAngle, ballID);
+		bAngle = b.CheckBallAngle(x, y, rad, bAngle, ballID, this);
 	}
 
 	/**
@@ -48,8 +48,8 @@ public class EnemyDrone extends Drone {
 	@Override
 	protected void adjustBall() {
 		double radAngle = bAngle*Math.PI/180;		// put angle in radians
-		x += bSpeed * Math.cos(radAngle);		// new X position
-		y += bSpeed * Math.sin(radAngle);		// new Y position
+		x += bSpeed * Math.cos(radAngle) * DroneInterface.SPEEDmult;		// new X position
+		y += bSpeed * Math.sin(radAngle) * DroneInterface.SPEEDmult;		// new Y position
 	}
 	/**
 	 * return string defining Drone type
@@ -58,7 +58,4 @@ public class EnemyDrone extends Drone {
 		return "Enemy Drone";
 	}
 	
-	
-	
-
 }

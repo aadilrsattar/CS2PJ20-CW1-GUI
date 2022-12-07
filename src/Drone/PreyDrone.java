@@ -39,15 +39,13 @@ public class PreyDrone extends Drone{
 	 */
 	@Override
 	protected void checkBall(DroneArena b) {
-		if (b.checkHit(this)) score++;			// if been hit, then increase score
-		bAngle = b.CheckBallAngle(x, y, rad, bAngle, ballID);
+		bAngle = b.CheckBallAngle(x, y, rad, bAngle, ballID, this);
 	}
 	/**
 	 * draw Ball and display score
 	 */
 	public void drawBall(MyCanvas mc) {
 		super.drawBall(mc);
-		mc.showInt(x, y, score);
 	}
 
 	/**
@@ -57,8 +55,8 @@ public class PreyDrone extends Drone{
 	@Override
 	protected void adjustBall() {
 		double radAngle = bAngle*Math.PI/180;		// put angle in radians
-		x += bSpeed * Math.cos(radAngle);		// new X position
-		y += bSpeed * Math.sin(radAngle);		// new Y position
+		x += bSpeed * Math.cos(radAngle) * DroneInterface.SPEEDmult;		// new X position
+		y += bSpeed * Math.sin(radAngle) * DroneInterface.SPEEDmult;		// new Y position
 		}	
 	/**
 	 * return string defining ball ... here as target

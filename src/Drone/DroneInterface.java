@@ -50,6 +50,7 @@ public class DroneInterface extends Application {
 	private JFileChooser chooser;
 	private int xSize=500;
 	private int ySize=600;
+	public static double SPEEDmult=1;
 	
 	public DroneInterface() {
     	chooser=new JFileChooser("/");
@@ -178,19 +179,38 @@ public class DroneInterface extends Application {
 	           	drawWorld();
 	       }
 	    });
+	    
+	    Button btnOAdd = new Button("New Object");				// now button for stop
+	    btnOAdd.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override
+	        public void handle(ActionEvent event) {
+	           	arena.addObject();								// and its action to stop the timer
+	           	drawWorld();
+	       }
+	    });
+	    
+	    Button btnSPEEDplus = new Button("+");				// now button for stop
+	    btnSPEEDplus.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override
+	        public void handle(ActionEvent event) {
+	        	if (SPEEDmult < 5)SPEEDmult+=0.5;								// and its action to stop the timer
+	           	drawWorld();
+	       }
+	    });
+	    
+	    Button btnSPEEDminus = new Button("-");				// now button for stop
+	    btnSPEEDminus.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override
+	        public void handle(ActionEvent event) {
+	        	if (SPEEDmult > 1) SPEEDmult-=0.5;								// and its action to stop the timer
+	           	drawWorld();
+	       }
+	    });
 	    														// now add these buttons + labels to a HBox
-	    return new HBox(new Label("Run: "), btnStart, btnStop, new Label("Add: "), btnEAdd, btnPAdd);
+	    return new HBox(new Label("Run: "), btnStart, btnStop, new Label(" Add: "), btnEAdd, btnPAdd, btnOAdd, new Label("Speed adjust: "), btnSPEEDplus, btnSPEEDminus);
 	}
 
-	/**
-	 * Show the score .. by writing it at position x,y
-	 * @param x
-	 * @param y
-	 * @param score
-	 */
-	public void showScore (double x, double y, int score) {
-		mc.showText(x, y, Integer.toString(score));
-	}
+
 	/** 
 	 * draw the world with ball in it
 	 */

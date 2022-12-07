@@ -1,5 +1,7 @@
 package Drone;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.Serializable;
 
 import javafx.geometry.VPos;
@@ -18,7 +20,7 @@ public class MyCanvas {
 	int xCanvasSize = 500;				// constants for relevant sizes
 	int yCanvasSize = 1000;
     GraphicsContext gc; 
-    private final Image droneIMG, toyHeliIMG, objectIMG;
+    private static Image droneIMG, toyHeliIMG, objectIMG;
 
     /**
      * onstructor sets up relevant Graphics context and size of canvas
@@ -29,9 +31,14 @@ public class MyCanvas {
     	gc = g;
     	xCanvasSize = xcs;
     	yCanvasSize = ycs;
-    	droneIMG = new Image("https://images.vexels.com/media/users/3/215129/isolated/lists/f98ff00414055616a9675d5d4aed6a9d-quadcopter-drone-top-view-stroke-icon.png");
-        toyHeliIMG = new Image("https://cdn.iconscout.com/icon/premium/png-256-thumb/helicopter-4209758-3487458.png");
-        objectIMG = new Image("https://www.iconsdb.com/icons/download/red/square-48.png");
+    	try {
+			droneIMG = new Image(new FileInputStream("src/drone.png"));
+			toyHeliIMG = new Image(new FileInputStream("src/helicopter.png"));
+	        objectIMG = new Image(new FileInputStream("src/square-48.png"));
+		} catch (FileNotFoundException e) {
+			System.out.println("Image not load, kys");
+		}
+
     }
     /**
      * get size in x of canvas
@@ -79,11 +86,11 @@ public class MyCanvas {
     public void showCircle(double x, double y, double rad, char type) {
     	
     	if (type=='e') {
-    		Image img = droneIMG;
+    		Image img = toyHeliIMG;
     		gc.setFill(new ImagePattern(img)); 
     	}
     	else if (type=='p') {
-    		Image img = toyHeliIMG;
+    		Image img = droneIMG;
     		gc.setFill(new ImagePattern(img)); 
     	}
     	else if (type=='o') {
@@ -103,26 +110,4 @@ public class MyCanvas {
 		gc.fillArc(x-rad, y-rad, rad*2, rad*2, 0, 360, ArcType.ROUND);	// fill circle
 	}
 
-	/**
-	 * Show Text .. by writing string s at position x,y
-	 * @param x
-	 * @param y
-	 * @param s
-	 */
-	public void showText (double x, double y, String s) {
-		gc.setTextAlign(TextAlignment.CENTER);							// set horizontal alignment
-		gc.setTextBaseline(VPos.CENTER);								// vertical
-		gc.setFill(Color.WHITE);										// colour in white
-		gc.fillText(s, x, y);						// print score as text
-	}
-
-	/**
-	 * Show Int .. by writing int i at position x,y
-	 * @param x
-	 * @param y
-	 * @param i
-	 */
-	public void showInt (double x, double y, int i) {
-		showText (x, y, Integer.toString(i));
-	}	
 }
