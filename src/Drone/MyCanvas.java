@@ -13,9 +13,8 @@ import javafx.scene.shape.ArcType;
  *  Class to handle a canvas, used by different GUIs
  */
 public class MyCanvas {
-	int xCanvasSize = 500;				// constants for relevant sizes
-	int yCanvasSize = 1000;
-    GraphicsContext gc; 
+	private int xCanvasSize, yCanvasSize;				// constants for relevant sizes
+    private GraphicsContext gc; 
     private static Image droneIMG, toyHeliIMG, objectIMG; 
     public static Image backgroundGIF;
 
@@ -24,10 +23,10 @@ public class MyCanvas {
      * @param g
      * @param cs
      */
-    public MyCanvas(GraphicsContext g, int xcs, int ycs) {
+    public MyCanvas(GraphicsContext g, int xSize, int ySize) {
     	gc = g;
-    	xCanvasSize = xcs;
-    	yCanvasSize = ycs;
+    	xCanvasSize = xSize;
+    	yCanvasSize = ySize;
     	try {
 			droneIMG = new Image(new FileInputStream("src/drone.png"));
 			toyHeliIMG = new Image(new FileInputStream("src/helicopter.png"));
@@ -61,7 +60,7 @@ public class MyCanvas {
     }
     
 	/**
-     * drawIt ... draws object defined by given image at position and size
+     * drawIt ... draws Obstacle defined by given image at position and size
      * @param i		image
      * @param x		xposition	in range 0..1
      * @param y

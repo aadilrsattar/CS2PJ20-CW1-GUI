@@ -8,6 +8,10 @@ package Drone;
  *
  */
 public class EnemyDrone extends Drone {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static int EnemyDroneID=0;
 	double bAngle, bSpeed;			// angle and speed of travel
 	/**
@@ -49,14 +53,15 @@ public class EnemyDrone extends Drone {
 		double radAngle = bAngle*Math.PI/180;		// put angle in radians
 		
 		if (x<=0+rad) x=x+rad;
-		if (x>DroneInterface.getxSize()) x=x-rad;
+		if (x>DroneInterface.getxSize()-2) x=x-(rad+2);
 		
 		if (y<=0+rad) y=y+rad;
-		if (y>DroneInterface.getySize()) y=y-rad;
+		if (y>DroneInterface.getySize()-2) y=y-rad+2;
 		
 		else {
-				x += bSpeed * Math.cos(radAngle) * DroneInterface.SPEEDmult;		// new X position
-				y += bSpeed * Math.sin(radAngle) * DroneInterface.SPEEDmult;		// new Y position
+				double multiplier = DroneInterface.getSPEEDmult();
+				x += bSpeed * Math.cos(radAngle) * multiplier;		// new X position
+				y += bSpeed * Math.sin(radAngle) * multiplier;		// new Y position
 		}
 	}
 	/**
@@ -64,6 +69,10 @@ public class EnemyDrone extends Drone {
 	 */
 	protected String getStrType() {
 		return "Enemy Drone";
+	}
+	
+	public static void resetID() {
+		EnemyDroneID=0;
 	}
 	
 }

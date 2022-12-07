@@ -9,6 +9,10 @@ package Drone;
  */
 public class PreyDrone extends Drone{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static int PreyDroneID=0;
 	double bAngle, bSpeed;
 	
@@ -62,8 +66,10 @@ public class PreyDrone extends Drone{
 		if (y>DroneInterface.getySize()) y=y-rad;
 		
 		else {
-				x += bSpeed * Math.cos(radAngle) * DroneInterface.SPEEDmult;		// new X position
-				y += bSpeed * Math.sin(radAngle) * DroneInterface.SPEEDmult;		// new Y position
+				double multiplier = DroneInterface.getSPEEDmult();
+				
+				x += bSpeed * Math.cos(radAngle) * multiplier;		// new X position
+				y += bSpeed * Math.sin(radAngle) * multiplier;		// new Y position
 		}
 	}
 	/**
@@ -72,4 +78,8 @@ public class PreyDrone extends Drone{
 	protected String getStrType() {
 		return "Prey Drone";
 	}	
+	
+	public static void resetID() {
+		PreyDroneID=0;
+	}
 }

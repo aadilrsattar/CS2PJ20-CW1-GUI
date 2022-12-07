@@ -11,6 +11,8 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
 
 import javafx.animation.AnimationTimer;
@@ -46,9 +48,9 @@ public class DroneInterface extends Application {
 	private VBox rtPane;										// vertical box for putting info
 	private DroneArena arena;
 	private JFileChooser chooser;
-	private static int xSize=500;
-	private static int ySize=600;
-	public static double SPEEDmult=1;
+	private static int xSize=1000;
+	private static int ySize=800;
+	private static double SPEEDmult=1;
 	
 	public DroneInterface() {
     	chooser=new JFileChooser("/");
@@ -102,19 +104,27 @@ public class DroneInterface extends Application {
 	
 		Menu mFile = new Menu("File");							// add File main menu
 		
-		MenuItem mSave = new MenuItem("Save");					// whose sub menu has Exit
+		MenuItem loadnewArena = new MenuItem("New Arena");
+		loadnewArena.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle (ActionEvent s) {
+				loadnewArena();
+			}
+		});
 		
+		MenuItem mSave = new MenuItem("Save");					// whose sub menu has Exit
 		mSave.setOnAction(new EventHandler<ActionEvent>() {
 		    public void handle(ActionEvent s) {
 		    	saveArena();
 		    }
 		    });
 		
+		
+		
 		MenuItem mLoad = new MenuItem("Load");					// whose sub menu has Exit
 		mLoad.setOnAction(new EventHandler<ActionEvent>() {
 		    public void handle(ActionEvent s) {					// action on exit is
 		    	loadArena();
-
+		    	drawWorld ();
 		    }
 		});
 		
@@ -125,7 +135,7 @@ public class DroneInterface extends Application {
 		        System.exit(0);									// exit program
 		    }
 		});
-		mFile.getItems().addAll(mSave, mLoad, mExit);							// add exit to File menu
+		mFile.getItems().addAll(loadnewArena,mSave, mLoad, mExit);							// add exit to File menu
 		
 		Menu mHelp = new Menu("Help");							// create Help menu
 		MenuItem mAbout = new MenuItem("About");				// add About sub men item
@@ -179,7 +189,7 @@ public class DroneInterface extends Application {
 	       }
 	    });
 	    
-	    Button btnOAdd = new Button("New Object");				// now button for stop
+	    Button btnOAdd = new Button("New Obstacle");				// now button for stop
 	    btnOAdd.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override
 	        public void handle(ActionEvent event) {
@@ -231,6 +241,40 @@ public class DroneInterface extends Application {
 		}	
 	}
 	
+	private void loadnewArena() {
+		Thread t1 = new Thread(new Runnable() {
+			public void run() {
+				JTextField xCoord = new JTextField();
+				JTextField yCoord = new JTextField();
+				
+				Object[] fields = {"Enter a new Width", xCoord, "Enter a new Height", yCoord};
+				JOptionPane.showConfirmDialog(null, fields, "New Arena", JOptionPane.WARNING_MESSAGE);
+				
+				try {
+					int xNew = Integer.parseInt(xCoord.getText());
+					int yNew = Integer.parseInt(yCoord.getText());
+					if (yNew>=100 && yNew <=750 || xNew>=100 && xNew <=750) {
+						xSize=xNew;
+						ySize=yNew;
+					    arena.clearDrones();
+						EnemyDrone.resetID();
+						PreyDrone.resetID();
+						Obstacle.resetID();
+					    arena = new DroneArena(xSize, ySize);								// set up arena
+					    drawWorld();
+					    
+					}
+					else {JOptionPane.showMessageDialog(null, "Error, too big/small");
+					
+					}
+				} catch (NumberFormatException e) {
+					JOptionPane.showMessageDialog(null, "Invalid Input, please input a number");
+				}
+			}
+		});
+		t1.start();
+	}
+	
 	private void saveArena() {
 		Thread t1 = new Thread(new Runnable() {
 				public void run() {
@@ -250,6 +294,7 @@ public class DroneInterface extends Application {
 		});
 		t1.start();
 	}
+	
 	private void loadArena() {
 		Thread t2 = new Thread(new Runnable() {
 				public void run() {
@@ -263,7 +308,7 @@ public class DroneInterface extends Application {
 	            			arena=(DroneArena)res.readObject();
 	            			res.close();
 	            		} catch (Exception e) {
-	            			System.out.print("Cannot load this File");
+	            			System.out.print("Cannot load this file");
 	            		}
 	            	}
 				}
@@ -279,7 +324,9 @@ public class DroneInterface extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
 		primaryStage.setTitle("RJMs attempt at Moving my Balls");
+		
 	    BorderPane bp = new BorderPane();
+	    
 	    bp.setPadding(new Insets(10, 20, 10, 20));
 
 	    bp.setTop(setMenu());											// put menu at the top
@@ -289,11 +336,11 @@ public class DroneInterface extends Application {
 	    root.getChildren().add( canvas );
 	    bp.setLeft(root);												// load canvas to left area
 	
-	    mc = new MyCanvas(canvas.getGraphicsContext2D(), getxSize(), ySize);
+	    mc = new MyCanvas(canvas.getGraphicsContext2D(), xSize, ySize);
 
 	    setMouseEvents(canvas);											// set up mouse events
 
-	    arena = new DroneArena(getxSize(), ySize);								// set up arena
+	    arena = new DroneArena(xSize, ySize);								// set up arena
 	    drawWorld();
 	    
 	    timer = new AnimationTimer() {									// set up timer
@@ -312,7 +359,7 @@ public class DroneInterface extends Application {
 		  
 	    bp.setBottom(setButtons());										// set bottom pane with buttons
 
-	    Scene scene = new Scene(bp, getxSize()*1.5, ySize*1.2);							// set overall scene
+	    Scene scene = new Scene(bp, xSize*1.5, ySize*1.2);							// set overall scene
         bp.prefHeightProperty().bind(scene.heightProperty());
         bp.prefWidthProperty().bind(scene.widthProperty());
 
@@ -341,5 +388,8 @@ public class DroneInterface extends Application {
 		return ySize;
 	}
 
+	public static double getSPEEDmult() {
+		return SPEEDmult;
+	}
 
 }

@@ -16,7 +16,7 @@ public abstract class Drone implements Serializable {
 	static int ballCounter = 0;						// used to give each ball a unique identifier
 	protected int ballID;
 	protected int ID;		// unique identifier for item
-	public boolean toRemove=false;
+	protected boolean toRemove=false;
 	
 	Drone(){};
 	/**

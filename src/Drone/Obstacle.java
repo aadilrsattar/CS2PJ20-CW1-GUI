@@ -7,12 +7,16 @@ package Drone;
  * @author shsmchlr
  * Ball which gets in way of game ball
  */
-public class Object extends Drone {
+public class Obstacle extends Drone {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static int ObjectID=0;
 	/**
 	 * 
 	 */
-	public Object() {
+	public Obstacle() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -21,7 +25,7 @@ public class Object extends Drone {
 	 * @param iy
 	 * @param ir
 	 */
-	public Object(double ix, double iy, double ir) {
+	public Obstacle(double ix, double iy, double ir) {
 		super(ix, iy, ir);
 		type = 'o';
 		ID=ObjectID++;
@@ -45,7 +49,10 @@ public class Object extends Drone {
 
 	}
 	protected String getStrType() {
-		return "Object";
+		return "Obstacle";
 	}	
-
+	
+	public static void resetID() {
+		ObjectID=0;
+	}
 }

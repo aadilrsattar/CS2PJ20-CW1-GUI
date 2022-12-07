@@ -18,13 +18,13 @@ public class DroneArena implements Serializable {
 	Random randomGenerator;
  
 	
-	int xSize, ySize;						// size of arena
+	private int xSize, ySize;						// size of arena
 	private ArrayList<Drone> allBalls;			// array list of all balls in arena
 	/**
 	 * construct an arena
 	 */
 	DroneArena() {
-		this(500, 400);			// default size
+		this(1000, 1000);			// default size
 
 	}
 	/**
@@ -44,14 +44,14 @@ public class DroneArena implements Serializable {
 	 * return arena size in x direction
 	 * @return
 	 */
-	public double getXSize() {
+	public int getXSize() {
 		return xSize;
 	}
 	/**
 	 * return arena size in y direction
 	 * @return
 	 */
-	public double getYSize() {
+	public int getYSize() {
 		return ySize;
 	}
 	/**
@@ -72,6 +72,11 @@ public class DroneArena implements Serializable {
 			}
 		}
 	}
+	
+	public void clearDrones() {
+		allBalls.clear();
+	}
+	
 	/**
 	 * adjust all balls .. move any moving ones
 	 */
@@ -177,7 +182,7 @@ public class DroneArena implements Serializable {
 		counter++;
 		}while (checkplace(x,y,r)&&counter<100);
 		
-		allBalls.add(new Object(x, y, r));
+		allBalls.add(new Obstacle(x, y, r));
 
 		}
 }
