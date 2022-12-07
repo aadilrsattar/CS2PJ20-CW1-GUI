@@ -3,14 +3,12 @@
  */
 package Drone;
 
-import java.io.Serializable;
-
 /**
  * @author shsmchlr
  *
  */
 public class EnemyDrone extends Drone {
-
+	private static int EnemyDroneID=0;
 	double bAngle, bSpeed;			// angle and speed of travel
 	/**
 	 * 
@@ -30,6 +28,7 @@ public class EnemyDrone extends Drone {
 		super(ix, iy, ir);
 		bAngle = ia;
 		bSpeed= is;
+		ID=EnemyDroneID++;
 	}
 
 	/**

@@ -9,11 +9,13 @@ import java.io.Serializable;
  * @author shsmchlr
  *
  */
-public abstract class Drone {
+public abstract class Drone implements Serializable {
+	private static final long serialVersionUID = 1L;
 	protected double x, y, rad;						// position and size of ball
 	protected char type;								// used to set colour
 	static int ballCounter = 0;						// used to give each ball a unique identifier
-	protected int ballID;							// unique identifier for item
+	protected int ballID;
+	protected int ID;		// unique identifier for item
 	public boolean toRemove=false;
 	
 	Drone(){};
@@ -29,6 +31,7 @@ public abstract class Drone {
 		rad = ir;
 		ballID = ballCounter++;			// set the identifier and increment class static
 		type='e';
+		ID=0;
 	}
 	/**
 	 * return x position
@@ -45,20 +48,15 @@ public abstract class Drone {
 	 * @return
 	 */
 	public double getRad() { return rad; }
-	/** 
-	 * set the ball at position nx,ny
-	 * @param nx
-	 * @param ny
-	 */
-	public void setXY(double nx, double ny) {
-		x = nx;
-		y = ny;
-	}
+
+	
 	/**
 	 * return the identity of ball
 	 * @return
 	 */
 	public int getID() {return ballID; }
+	
+	
 	/**
 	 * draw a ball into the interface bi
 	 * @param bi
@@ -73,7 +71,7 @@ public abstract class Drone {
 	 * return string describing ball
 	 */
 	public String toString() {
-		return getStrType()+" at "+Math.round(x)+", "+Math.round(y);
+		return getStrType()+" "+ ID +" at "+Math.round(x)+", "+Math.round(y);
 	}
 	/**
 	 * abstract method for checking a ball in arena b

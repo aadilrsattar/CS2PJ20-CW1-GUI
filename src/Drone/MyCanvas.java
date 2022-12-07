@@ -2,15 +2,11 @@ package Drone;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.Serializable;
 
-import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.ArcType;
-import javafx.scene.text.TextAlignment;
 
 /**
  * @author shsmchlr
@@ -20,7 +16,8 @@ public class MyCanvas {
 	int xCanvasSize = 500;				// constants for relevant sizes
 	int yCanvasSize = 1000;
     GraphicsContext gc; 
-    private static Image droneIMG, toyHeliIMG, objectIMG;
+    private static Image droneIMG, toyHeliIMG, objectIMG; 
+    public static Image backgroundGIF;
 
     /**
      * onstructor sets up relevant Graphics context and size of canvas
@@ -35,6 +32,7 @@ public class MyCanvas {
 			droneIMG = new Image(new FileInputStream("src/drone.png"));
 			toyHeliIMG = new Image(new FileInputStream("src/helicopter.png"));
 	        objectIMG = new Image(new FileInputStream("src/square-48.png"));
+	        backgroundGIF = new Image(new FileInputStream("src/background.gif"));
 		} catch (FileNotFoundException e) {
 			System.out.println("Image not load, kys");
 		}
@@ -69,10 +67,10 @@ public class MyCanvas {
      * @param y
      * @param sz	size
      */
-	public void drawIt (Image i, double x, double y, double sz) {
+	public void drawIt (Image i, double x, double y, double sx, double sy) {
 			// to draw centred at x,y, give top left position and x,y size
 			// sizes/position in range 0..1, so scale to canvassize 
-		gc.drawImage(i, xCanvasSize * (x - sz/2), yCanvasSize*(y - sz/2), xCanvasSize*sz, yCanvasSize*sz);
+		gc.drawImage(i, x-sx/2, y-sy/2, sx, sy);
 	}
 
 	

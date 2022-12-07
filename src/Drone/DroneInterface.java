@@ -6,13 +6,11 @@ package Drone;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.filechooser.FileFilter;
 
 import javafx.animation.AnimationTimer;
@@ -66,6 +64,7 @@ public class DroneInterface extends Application {
     		return "lom";
     		}
     	};
+    	chooser.setFileFilter(filter);
 	}
 	
 	/**
@@ -202,7 +201,7 @@ public class DroneInterface extends Application {
 	    btnSPEEDminus.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override
 	        public void handle(ActionEvent event) {
-	        	if (SPEEDmult > 1) SPEEDmult-=0.5;								// and its action to stop the timer
+	        	if (SPEEDmult > 0.5) SPEEDmult-=0.5;								// and its action to stop the timer
 	           	drawWorld();
 	       }
 	    });
@@ -216,6 +215,7 @@ public class DroneInterface extends Application {
 	 */
 	public void drawWorld () {
 	 	mc.clearCanvas();						// set beige colour
+	 	mc.drawIt(MyCanvas.backgroundGIF, arena.getXSize()/2, arena.getYSize()/2, arena.getXSize(), arena.getYSize() );
 	 	arena.drawArena(mc);
 	}
 	
@@ -241,7 +241,9 @@ public class DroneInterface extends Application {
 							FileOutputStream FileInput = new FileOutputStream(selFile);
 							ObjectOutputStream res = new ObjectOutputStream(FileInput);
 							res.writeObject(arena);
-							} catch (IOException e) {e.printStackTrace();}	
+							res.close();
+							} catch (Exception e) {
+								System.out.println("Cannot save file");}	
 						}
 
 				}
@@ -254,14 +256,14 @@ public class DroneInterface extends Application {
 					int returnVal = chooser.showOpenDialog(null);
 	            	if (returnVal == JFileChooser.APPROVE_OPTION) {
 	            		File selFile = chooser.getSelectedFile();
-	            		
 	            		try {
 	            			
 	            			FileInputStream FileInput = new FileInputStream(selFile);
 	            			ObjectInputStream res = new ObjectInputStream(FileInput);
 	            			arena=(DroneArena)res.readObject();
+	            			res.close();
 	            		} catch (Exception e) {
-	            			System.out.print(" ");
+	            			System.out.print("Cannot load this File");
 	            		}
 	            	}
 				}

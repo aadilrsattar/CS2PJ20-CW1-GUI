@@ -13,6 +13,8 @@ import java.util.Random;
  * Class for Arena of balls
  */
 public class DroneArena implements Serializable {	
+	private static final long serialVersionUID = 1L;
+
 	Random randomGenerator;
  
 	
@@ -34,8 +36,8 @@ public class DroneArena implements Serializable {
 		xSize = xS;
 		ySize = yS;
 		allBalls = new ArrayList<Drone>();					// list of all balls, initially empty
-		allBalls.add(new EnemyDrone(xS/2, yS/2, 30, 45, 10));	// add game Drone
-		allBalls.add(new PreyDrone(xS/2, 30, 20, 15, 15));			// add target Drone
+		allBalls.add(new EnemyDrone(xS/2, yS/2, 25, 20, 10));	// add game Drone
+		allBalls.add(new PreyDrone(xS/2, 30, 20, 20, 15));			// add target Drone
 	}
 	/**
 	 * return arena size in x direction
@@ -98,9 +100,9 @@ public class DroneArena implements Serializable {
 		boolean bool=true;
 		double ans = ang;
 		while(bool){
-			if (x < rad || x > xSize - rad) ans = 180 - ans;
+			if (x < rad || x > xSize - rad) {ans = 180 - ans; return ans;}
 			// if Drone hit (tried to go through) left or right walls, set mirror angle, being 180-angle
-			if (y < rad || y > ySize - rad) ans = -ans;
+			if (y < rad || y > ySize - rad) { ans = -ans; return ans;}
 			// if try to go off top or bottom, set mirror angle
 			
 			for (Drone b : allBalls) 
@@ -121,85 +123,60 @@ public class DroneArena implements Serializable {
 				
 		}return ans; // return the angle
 	}
-
-	/**
-	 * check if the target Drone has been hit by another Drone
-	 * @param target	the target Drone
-	 * @return 	true if hit
-	 */
-	public boolean checkHit(Drone target) {
-		boolean ans = false;
-		for (Drone b : allBalls)
-			if (b instanceof EnemyDrone && b.hitting(target)) ans = true;
-				// try all balls, if GameBall, check if hitting the target
-		return ans;
+	
+	private Boolean checkplace(double x, double y, double r) {
+		
+		if((x+r>=xSize || y+r>= ySize || x<r || y<r ))return true;
+		
+		for(Drone d : allBalls) {
+			
+			if (d.hitting(x, y, r)) return true;
+			 
+		}
+		return false;
 	}
 	
 	public void addEnemyDrone() {
 		randomGenerator = new Random(); 
+		double x,y,ang,r=20;
+		int counter=0;
+		do {
+		x = randomGenerator.nextInt(xSize);
+		y = randomGenerator.nextInt(ySize);
+		ang = randomGenerator.nextInt(360);
+		counter++;
+		}while (checkplace(x,y,r)&&counter<100);
 		
-		boolean bool=true;
-		while(bool) {
-			double x = randomGenerator.nextInt(xSize);
-			double y = randomGenerator.nextInt(ySize);
-			double r = 20;
-			if (x < r || x > xSize - r);
-			else if (y < r || y > ySize - r);
-			else {
-				for (Drone b : allBalls) {
-					if (b.hitting(x, y, 30));
-					else {
-						allBalls.add(new EnemyDrone(x, y, 20, 45, 10));
-						bool=false;
-						break;
-					}
-				}
-			}
+		allBalls.add(new EnemyDrone(x, y, r, ang, 10));
+
 		}
-	}
+	
 	public void addPreyDrone() {
 		randomGenerator = new Random(); 
+		double x,y,ang,r=20;
+		int counter=0;
+		do {
+		x = randomGenerator.nextInt(xSize);
+		y = randomGenerator.nextInt(ySize);
+		ang = randomGenerator.nextInt(360);
+		counter++;
+		}while (checkplace(x,y,r)&&counter<100);
 		
-		boolean bool=true;
-		while(bool) {
-			double x = randomGenerator.nextInt(xSize);
-			double y = randomGenerator.nextInt(ySize);
-			double r = 20;
-			if (x < r || x > xSize - r);
-			else if (y < r || y > ySize - r);
-			else {
-				for (Drone b : allBalls) {
-					if (b.hitting(x, y, 20));
-					else {
-						allBalls.add(new PreyDrone(x, y, 20, 45, 10));
-						bool=false;
-						break;
-					}
-				}
-			}
+		allBalls.add(new PreyDrone(x, y, r, ang, 13));
+
 		}
-	}
-	
+
 	public void addObject() {
 		randomGenerator = new Random(); 
+		double x,y,r=20;
+		int counter=0;
+		do {
+		x = randomGenerator.nextInt(xSize);
+		y = randomGenerator.nextInt(ySize);
+		counter++;
+		}while (checkplace(x,y,r)&&counter<100);
 		
-		boolean bool=true;
-		while(bool) {
-			double x = randomGenerator.nextInt(xSize);
-			double y = randomGenerator.nextInt(ySize);
-			double r = 20;
-			if (x < r || x > xSize - r);
-			else if (y < r || y > ySize - r);
-			else {
-				for (Drone b : allBalls) {
-					if (b.hitting(x, y, 20));
-					else {
-						allBalls.add(new Object(x, y, 20));
-						bool=false;
-						break;
-					}
-				}
-			}
+		allBalls.add(new Object(x, y, r));
+
 		}
-	}
 }

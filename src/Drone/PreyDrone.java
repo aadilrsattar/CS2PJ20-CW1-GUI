@@ -3,16 +3,15 @@
  */
 package Drone;
 
-import java.io.Serializable;
-
 /**
  * @author shsmchlr
  * The Target Ball which you are aiming at
  */
 public class PreyDrone extends Drone{
 	
-	private int score;
+	private static int PreyDroneID=0;
 	double bAngle, bSpeed;
+	
 	/**
 	 * 
 	 */
@@ -27,10 +26,10 @@ public class PreyDrone extends Drone{
 	 */
 	public PreyDrone(double ix, double iy, double ir, double ia, double is) {
 		super(ix, iy, ir);
-		score = 0;
 		type = 'p';
 		bAngle = ia;
 		bSpeed = is;
+		ID=PreyDroneID++;
 	}
 
 	/** 

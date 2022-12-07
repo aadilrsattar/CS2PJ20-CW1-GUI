@@ -8,7 +8,7 @@ package Drone;
  * Ball which gets in way of game ball
  */
 public class Object extends Drone {
-
+	private static int ObjectID=0;
 	/**
 	 * 
 	 */
@@ -24,6 +24,7 @@ public class Object extends Drone {
 	public Object(double ix, double iy, double ir) {
 		super(ix, iy, ir);
 		type = 'o';
+		ID=ObjectID++;
 	}
 
 	/* (non-Javadoc)
