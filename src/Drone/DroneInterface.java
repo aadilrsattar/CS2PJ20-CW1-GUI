@@ -3,6 +3,7 @@
  */
 package Drone;
 
+import java.awt.Point;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -72,18 +73,25 @@ public class DroneInterface extends Application {
 	    alert.setContentText("Buttons add new flying objects, and speed increases/decreases with the + and - buttons respectively.");		// give text
 	    alert.showAndWait();										// show box and wait for user to close
 	}
+	
+
 
 	 /**
-	  * set up the mouse event - when mouse pressed, put Drone there
+	  * set up the mouse event - when mouse clicked, add an obstacle then redraw arena
 	  * @param canvas
 	  */
-	void setMouseEvents (Canvas canvas) {
-	       canvas.addEventHandler(MouseEvent.MOUSE_MOVED, 		// for MOUSE MOVED event
+	 void setMouseEvents (Canvas canvas) {
+	       canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,		// for MOUSE PRESSED event
+	    		   
 	    	       new EventHandler<MouseEvent>() {
 	    	           @Override
-	    	           public void handle(MouseEvent e) {
-	  		            	drawWorld();							// redraw world
-	  		            	drawStatus();							// redraw status
+	    	           public void handle(MouseEvent e) {	
+	    	        	   	double x= e.getSceneX();			//take in x and y input of mouse
+	    	        	    double y=e.getSceneY();
+	    	        	   
+	    	        	   arena.addObject(x, y);				//add object with passed x and y of mouse position
+	    	        	   drawWorld();							// redraw world
+	    	        	   drawStatus();						// redraw status
 	    	           }
 	    	       });
 	}
@@ -195,7 +203,7 @@ public class DroneInterface extends Application {
 	    btnOAdd.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override
 	        public void handle(ActionEvent event) {
-	           	arena.addObject();								// and its action to addObject
+	           	arena.addObject(0,0);								// and its action to addObject
 	           	drawWorld();									// then draw world with the update
 	       }
 	    });

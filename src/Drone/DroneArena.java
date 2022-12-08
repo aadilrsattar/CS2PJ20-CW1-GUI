@@ -31,7 +31,7 @@ public class DroneArena implements Serializable {
 		allDrones = new ArrayList<Drone>();			// list of all drones, initially empty
 		addPoliceHelicopter();							// add Police Helicopter
 		addIllegalDrone();								// add Illegal Drone
-		addObject();								// add object
+		addObject(0, 0);								// add object
 		addBirds();									// add birds
 	}
 	
@@ -183,17 +183,26 @@ public class DroneArena implements Serializable {
 	
 	/**
 	 * Function to add an add an Object
+	 * @param yM 
+	 * @param xM 
 	 */
-	public void addObject() {
+	public void addObject(double xM, double yM) {
 		randomGenerator = new Random(); 
 		double x,y,r=10;
 		int counter=0;
-		do {
-		x = randomGenerator.nextInt(xSize);					// Makes random x and y value				
-		y = randomGenerator.nextInt(ySize);
-		counter++;
-		}while (checkplace(x,y,r)&&counter<100);			// Checks if there is anything in that position
+		if (xM==0&&yM==0) {										//if x and y of mouse is not 0 (impossible to do with mouse)
+			do {												//create random x and y value
+				x = randomGenerator.nextInt(xSize);							
+				y = randomGenerator.nextInt(ySize);
+				counter++;
+			}while (checkplace(x,y,r)&&counter<100);			// Checks if there is anything in that position
+		}
+		else {
+			x=xM-20;	// else, put where mouse is 
+			y=yM-35;	// had to move it to make it tip of mouse
+		}
 		allDrones.add(new Obstacle(x, y, r));				// Adds if there isn't anything in those coordinates
+	
 	}
 	/**
 	 * Function for adding a Bird
