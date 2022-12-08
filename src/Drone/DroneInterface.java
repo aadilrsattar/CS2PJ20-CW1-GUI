@@ -167,7 +167,9 @@ public class DroneInterface extends Application {
 	 */
 	private HBox setButtons() {
 	    Button btnStart = new Button("Start");					// create button for starting
+
 	    btnStart.setOnAction(new EventHandler<ActionEvent>() {	// now define event when it is pressed
+	    	
 	        @Override
 	        public void handle(ActionEvent event) {
 	        	timer.start();									// its action is to start the timer
@@ -330,7 +332,7 @@ public class DroneInterface extends Application {
 	    bp.prefHeightProperty().bind(scene.heightProperty());						
 	    bp.prefWidthProperty().bind(scene.widthProperty());
 	    
-	    primaryStage.getIcons().add(new Image(new FileInputStream("src/helicopter.png")));		// changes the icon
+	    primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("helicopter.png")));		// changes the icon
 	    primaryStage.setScene(scene);
 	    primaryStage.show();
 	}

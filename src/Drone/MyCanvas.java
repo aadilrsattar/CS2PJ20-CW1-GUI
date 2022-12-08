@@ -15,7 +15,7 @@ import javafx.scene.shape.ArcType;
 public class MyCanvas {
 	private int xCanvasSize, yCanvasSize;							// constants for relevant sizes
     private GraphicsContext gc; 									// name for GraphicsContext within this class
-    private static Image droneIMG, heliIMG, objectIMG, birdIMG; 	// Image for the different filling to portray different types of drones
+    private Image droneIMG, heliIMG, objectIMG, birdIMG; 	// Image for the different filling to portray different types of drones
     private static Image backgroundGIF;								// Image for the background
     
 
@@ -64,19 +64,13 @@ public class MyCanvas {
     /**
      * loadImages function to load images from src folder
      */
-    private static void loadImages() {
-    	if (droneIMG != null && heliIMG != null && objectIMG != null && backgroundGIF != null && birdIMG != null ) { //makes sure only loads the images once
-    		return;
-    	}
-    	try {
-    		droneIMG = new Image(new FileInputStream("src/drone.png"));				//load image of drone from src
-    		heliIMG = new Image(new FileInputStream("src/helicopter.png"));			//load image of helicopter from src
-    		objectIMG = new Image(new FileInputStream("src/square-48.png"));		//load image of object from src
-    		backgroundGIF = new Image(new FileInputStream("src/background.gif"));	//load gif of Background from src
-    		birdIMG = new Image(new FileInputStream("src/birds.png"));				//load png of birds from src
-    	} catch (FileNotFoundException e) {
-    		System.out.println("Images not loading, check src folder");
-    	}
+    private void loadImages() {
+		droneIMG = new Image(getClass().getResourceAsStream("drone.png"));					//load image of drone from src
+		heliIMG = new Image(getClass().getResourceAsStream("helicopter.png"));				//load image of helicopter from src
+		objectIMG = new Image(getClass().getResourceAsStream("square-48.png"));				//load image of object from src
+		backgroundGIF = new Image(getClass().getResourceAsStream("background.gif"));	//load gif of Background from src
+		birdIMG = new Image(getClass().getResourceAsStream("birds.png"));				//load png of birds from src
+    	
     }
     
     /**
