@@ -4,8 +4,8 @@
 package Drone;
 
 /**
- * @author shsmchlr
- * The Target Ball which you are aiming at
+ * @StudentNo. 30004098
+ * This extending class of Drone is a drone that can die when touched by EnemyDrone
  */
 public class PreyDrone extends Drone{
 	
@@ -13,20 +13,15 @@ public class PreyDrone extends Drone{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static int PreyDroneID=0;
-	double bAngle, bSpeed;
-	
-	/**
-	 * 
-	 */
-	public PreyDrone() {
-		// TODO Auto-generated constructor stub
-	}
+	private static int PreyDroneID=0;					// ID for right side panel
+	private double bAngle, bSpeed;						// angle and speed of travel
 
-	/**
+	/** Create Prey Drone, size ir, arena sizes ix,iy, moving at angle ia and speed is
 	 * @param ix
 	 * @param iy
 	 * @param ir
+	 * @param ia
+	 * @param is
 	 */
 	public PreyDrone(double ix, double iy, double ir, double ia, double is) {
 		super(ix, iy, ir);
@@ -37,48 +32,44 @@ public class PreyDrone extends Drone{
 	}
 
 	/** 
-	 * checkBall in arena 
+	 * checkDrone in arena - change angle of travel if hitting wall or another Drone
 	 * @param b DroneArena
 	 */
 	@Override
-	protected void checkBall(DroneArena b) {
-		bAngle = b.CheckBallAngle(x, y, rad, bAngle, ballID, this);
+	protected void checkDrone(DroneArena b) {
+		bAngle = b.CheckdroneAngle(x, y, rad, bAngle, DroneID, this);
 	}
 	/**
-	 * draw Ball and display score
-	 */
-	public void drawBall(MyCanvas mc) {
-		super.drawBall(mc);
-	}
-
-	/**
-	 * adjustBall
-	 * for moving the ball - not needed here
+	 * adjustDrone
+	 * Here, move Drone depending on speed, angle and position
 	 */
 	@Override
-	protected void adjustBall() {
+	protected void adjustDrone() {
 		double radAngle = bAngle*Math.PI/180;		// put angle in radians
 		
-		if (x<=0+rad) x=x+rad;
-		if (x>DroneInterface.getxSize()) x=x-rad;
-		
-		if (y<=0+rad) y=y+rad;
+		if (x<=0) x=x+rad;
+		if (x>DroneInterface.getxSize()) x=x-rad;	//these are used to correct positions of drones that go off canvas 
+													//done by pushing them back in to boundaries of arena
+		if (y<=0) y=y+rad;
 		if (y>DroneInterface.getySize()) y=y-rad;
 		
 		else {
-				double multiplier = DroneInterface.getSPEEDmult();
+				double multiplier = DroneInterface.getSpeedMult();
 				
 				x += bSpeed * Math.cos(radAngle) * multiplier;		// new X position
 				y += bSpeed * Math.sin(radAngle) * multiplier;		// new Y position
 		}
 	}
 	/**
-	 * return string defining ball ... here as target
+	 * return string defining drone type, here being Illegal Drone
 	 */
 	protected String getStrType() {
-		return "Prey Drone";
+		return "Illegal Drone";
 	}	
 	
+	/**
+	 * resetting ID when making new arena
+	 */
 	public static void resetID() {
 		PreyDroneID=0;
 	}

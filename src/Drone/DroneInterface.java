@@ -38,28 +38,27 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
- * @author shsmchlr
- * Example with balls, paddles and targets in arena
+ * @StudentNo. 30004098
+ * Initialises a JavaFX GUI with all features, including drones, savin etc.
  */
 
 public class DroneInterface extends Application {
 	private MyCanvas mc;
 	private AnimationTimer timer;								// timer used for animation
 	private VBox rtPane;										// vertical box for putting info
-	private DroneArena arena;
-	private JFileChooser chooser;
-	private static int xSize=1000;
-	private static int ySize=800;
-	private static double SPEEDmult=1;
+	private DroneArena arena;									// what arena is referred to in this class
+	private JFileChooser chooser;								// for file load and save
+	private static int xSize=500;								// The xSize initially
+	private static int ySize=500;								// The ySize initially
+	private static double speedMult=1;							// Speed Multiplier, for increasing speed
 	
 	public DroneInterface() {
-    	chooser=new JFileChooser("/");
-    	FileFilter filter = new FileFilter() {
+    	chooser=new JFileChooser("/");							// This is a filter for loading files
+    	FileFilter filter = new FileFilter() {					
     		@Override
     		public boolean accept(File f) {
-    		if (f.getAbsolutePath().endsWith(".lom")) return true;
+    		if (f.getAbsolutePath().endsWith(".lom")) return true;	// It makes sure the file has the right extension
     		if (f.isDirectory()) return true;
-    		
     		return false;
     		}
     		public String getDescription() {
@@ -76,21 +75,29 @@ public class DroneInterface extends Application {
 	    Alert alert = new Alert(AlertType.INFORMATION);				// define what box is
 	    alert.setTitle("About");									// say is About
 	    alert.setHeaderText(null);
-	    alert.setContentText("RJM's JavaFX Demonstrator");			// give text
+	    alert.setContentText("This Simulation contains Police Drones chasing Illegal Drone, but pretty dumbly.");		// give text
+	    alert.showAndWait();										// show box and wait for user to close
+	}
+	
+	private void showManual() {
+		Alert alert = new Alert(AlertType.INFORMATION);				// define what box is
+	    alert.setTitle("Manual");									// say is a Manual
+	    alert.setHeaderText(null);
+	    alert.setContentText("Buttons add new flying objects, and speed increases/decreases with the + and - buttons respectively.");		// give text
 	    alert.showAndWait();										// show box and wait for user to close
 	}
 
 	 /**
-	  * set up the mouse event - when mouse pressed, put ball there
+	  * set up the mouse event - when mouse pressed, put Drone there
 	  * @param canvas
 	  */
 	void setMouseEvents (Canvas canvas) {
-	       canvas.addEventHandler(MouseEvent.MOUSE_PRESSED, 		// for MOUSE PRESSED event
+	       canvas.addEventHandler(MouseEvent.MOUSE_MOVED, 		// for MOUSE MOVED event
 	    	       new EventHandler<MouseEvent>() {
 	    	           @Override
 	    	           public void handle(MouseEvent e) {
 	  		            	drawWorld();							// redraw world
-	  		            	drawStatus();
+	  		            	drawStatus();							// redraw status
 	    	           }
 	    	       });
 	}
@@ -100,31 +107,31 @@ public class DroneInterface extends Application {
 	 */
 	MenuBar setMenu() {
 		
-		MenuBar menuBar = new MenuBar();						// create main menu
+		MenuBar menuBar = new MenuBar();						// create top menu
 	
 		Menu mFile = new Menu("File");							// add File main menu
 		
-		MenuItem loadnewArena = new MenuItem("New Arena");
-		loadnewArena.setOnAction(new EventHandler<ActionEvent>() {
+		MenuItem loadnewArena = new MenuItem("New Arena");			// whose sub menu has new arena
+		loadnewArena.setOnAction(new EventHandler<ActionEvent>() {	
 			public void handle (ActionEvent s) {
-				loadnewArena();
+				loadnewArena();										// which loads a new arena
 			}
 		});
 		
-		MenuItem mSave = new MenuItem("Save");					// whose sub menu has Exit
+		MenuItem mSave = new MenuItem("Save");					// whose sub menu has Save
 		mSave.setOnAction(new EventHandler<ActionEvent>() {
 		    public void handle(ActionEvent s) {
-		    	saveArena();
+		    	saveArena();									// which saves arena
 		    }
 		    });
 		
 		
 		
-		MenuItem mLoad = new MenuItem("Load");					// whose sub menu has Exit
+		MenuItem mLoad = new MenuItem("Load");					// whose sub menu has Load
 		mLoad.setOnAction(new EventHandler<ActionEvent>() {
-		    public void handle(ActionEvent s) {					// action on exit is
-		    	loadArena();
-		    	drawWorld ();
+		    public void handle(ActionEvent s) {					
+		    	loadArena();									// which load arena
+		    	drawWorld ();									// redraws world
 		    }
 		});
 		
@@ -135,17 +142,26 @@ public class DroneInterface extends Application {
 		        System.exit(0);									// exit program
 		    }
 		});
-		mFile.getItems().addAll(loadnewArena,mSave, mLoad, mExit);							// add exit to File menu
+		mFile.getItems().addAll(loadnewArena,mSave, mLoad, mExit);	// add new arena, save, load and exit to File menu
 		
 		Menu mHelp = new Menu("Help");							// create Help menu
-		MenuItem mAbout = new MenuItem("About");				// add About sub men item
+		MenuItem mAbout = new MenuItem("About");				// add About sub menu item
 		mAbout.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
             	showAbout();									// and its action to print about
             }	
 		});
-		mHelp.getItems().addAll(mAbout);						// add About to Help main item
+		
+		MenuItem mManual = new MenuItem("Manual");					// add Manual sub menu 
+		mManual.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+            	showManual();									// and its action to print Manual
+            }	
+		});
+		
+		mHelp.getItems().addAll(mAbout, mManual);						// add About to Help main item
 		
 		menuBar.getMenus().addAll(mFile, mHelp);				// set main menu with File, Help
 		return menuBar;											// return the menu
@@ -164,7 +180,7 @@ public class DroneInterface extends Application {
 	       }
 	    });
 
-	    Button btnStop = new Button("Pause");					// now button for stop
+	    Button btnStop = new Button("Pause");					// now button for pause
 	    btnStop.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override
 	        public void handle(ActionEvent event) {
@@ -172,20 +188,20 @@ public class DroneInterface extends Application {
 	       }
 	    });
 
-	    Button btnEAdd = new Button("New Enemy Drone");				// now button for stop
+	    Button btnEAdd = new Button("New Police Helicopter");		// now button for adding new helicopter
 	    btnEAdd.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override
 	        public void handle(ActionEvent event) {
-	           	arena.addEnemyDrone();								// and its action to stop the timer
-	           	drawWorld();
+	           	arena.addEnemyDrone();								// and its action to add Enemy drone 
+	           	drawWorld();										// then draw world with the update
 	       }
 	    });
-	    Button btnPAdd = new Button("New Prey Drone");				// now button for stop
+	    Button btnPAdd = new Button("New Illegal Drone");				// now button for adding new drone
 	    btnPAdd.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override
 	        public void handle(ActionEvent event) {
-	           	arena.addPreyDrone();								// and its action to stop the timer
-	           	drawWorld();
+	           	arena.addPreyDrone();								// and its action to add PreyDrone
+	           	drawWorld();										// then draw world with the update
 	       }
 	    });
 	    
@@ -193,26 +209,26 @@ public class DroneInterface extends Application {
 	    btnOAdd.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override
 	        public void handle(ActionEvent event) {
-	           	arena.addObject();								// and its action to stop the timer
-	           	drawWorld();
+	           	arena.addObject();								// and its action to addObject
+	           	drawWorld();									// then draw world with the update
 	       }
 	    });
 	    
-	    Button btnSPEEDplus = new Button("+");				// now button for stop
+	    Button btnSPEEDplus = new Button("+");							// now button to increase speed multiplier
 	    btnSPEEDplus.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override
 	        public void handle(ActionEvent event) {
-	        	if (SPEEDmult < 5)SPEEDmult+=0.5;								// and its action to stop the timer
-	           	drawWorld();
+	        	if (speedMult < 5)speedMult+=0.5;								// and its action to increase speedMult
+	           	drawWorld();													// then draw world with the updates
 	       }
 	    });
 	    
-	    Button btnSPEEDminus = new Button("-");				// now button for stop
+	    Button btnSPEEDminus = new Button("-");							// now button to decrease speed multiplier
 	    btnSPEEDminus.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override
 	        public void handle(ActionEvent event) {
-	        	if (SPEEDmult > 0.5) SPEEDmult-=0.5;								// and its action to stop the timer
-	           	drawWorld();
+	        	if (speedMult > 0.5) speedMult-=0.5;								// and its action to decrease speedMult
+	           	drawWorld();														// then draw world with the updates
 	       }
 	    });
 	    														// now add these buttons + labels to a HBox
@@ -221,99 +237,103 @@ public class DroneInterface extends Application {
 
 
 	/** 
-	 * draw the world with ball in it
+	 * draw the world with Drone in it
 	 */
 	public void drawWorld () {
-	 	mc.clearCanvas();						// set beige colour
-	 	mc.drawIt(MyCanvas.backgroundGIF, arena.getXSize()/2, arena.getYSize()/2, arena.getXSize(), arena.getYSize() );
+	 	mc.clearCanvas();						// set a Background
+	 	mc.drawIt(mc.getbackground(), arena.getXSize()/2, arena.getYSize()/2, arena.getXSize(), arena.getYSize() );
 	 	arena.drawArena(mc);
 	}
 	
 	/**
-	 * show where ball is, in pane on right
+	 * show where items are, displayed on a pane on right
 	 */
 	public void drawStatus() {
 		rtPane.getChildren().clear();					// clear rtpane
 		ArrayList<String> allBs = arena.describeAll();
 		for (String s : allBs) {
 			Label l = new Label(s); 		// turn description into a label
-			rtPane.getChildren().add(l);	// add label	
+			rtPane.getChildren().add(l);	// add label to pane
 		}	
 	}
-	
-	private void loadnewArena() {
-		Thread t1 = new Thread(new Runnable() {
+	/**
+	 * function to load a new arena 
+	 */
+	private void loadnewArena() {	
+		Thread t1 = new Thread(new Runnable() {			// loading it on to a new thread, as my main arena was crashing when it was loaded on the same thread as the rest of the program
 			public void run() {
-				JTextField xCoord = new JTextField();
-				JTextField yCoord = new JTextField();
-				
-				Object[] fields = {"Enter a new Width", xCoord, "Enter a new Height", yCoord};
-				JOptionPane.showConfirmDialog(null, fields, "New Arena", JOptionPane.WARNING_MESSAGE);
-				
+				JTextField nWidth = new JTextField();	// xCoord taken from user input
+				JTextField nHeight = new JTextField();	// yCoord taken from user input
+				Object[] fields = {"Enter a new Width", nWidth, "Enter a new Height", nHeight};	//Display the message to user, asking for width and height
+				JOptionPane.showConfirmDialog(null, fields, "New Arena", JOptionPane.WARNING_MESSAGE); // Label of the dialog asking for input
 				try {
-					int xNew = Integer.parseInt(xCoord.getText());
-					int yNew = Integer.parseInt(yCoord.getText());
-					if (yNew>=100 && yNew <=750 || xNew>=100 && xNew <=750) {
-						xSize=xNew;
-						ySize=yNew;
-					    arena.clearDrones();
-						EnemyDrone.resetID();
-						PreyDrone.resetID();
-						Obstacle.resetID();
-					    arena = new DroneArena(xSize, ySize);								// set up arena
-					    drawWorld();
-					    
+					int xNew = Integer.parseInt(nWidth.getText());				// Gets input from the user input and puts it in to xNew and yNew
+					int yNew = Integer.parseInt(nHeight.getText());				
+					if (yNew>=100 && yNew <=500 || xNew>=100 && xNew <=500) {	// Check if it is a real number and the parameters are workable
+						xSize=xNew;												// If the parameters work
+						ySize=yNew;												// then add xNew and yNew as new Size
+					    arena.clearDrones();									// function called to delete all drones from Array
+						EnemyDrone.resetID();									// reset all ID of drones used in right pane
+						PreyDrone.resetID();									
+						Obstacle.resetID();										
+					    arena = new DroneArena(xSize, ySize);					// set up arena
+					    drawWorld();											// shows updated arena
 					}
-					else {JOptionPane.showMessageDialog(null, "Error, too big/small");
-					
+					else {JOptionPane.showMessageDialog(null, "Error, too big/small"); // if input is too big or small, tells the user
 					}
 				} catch (NumberFormatException e) {
-					JOptionPane.showMessageDialog(null, "Invalid Input, please input a number");
+					JOptionPane.showMessageDialog(null, "Invalid Input, please input a number"); // if input is not a valid number, tells the user
 				}
 			}
 		});
-		t1.start();
+		t1.start();	// start on that thread
 	}
 	
-	private void saveArena() {
+	/**
+	 * Function to save the current arena
+	 */
+	private void saveArena() {												// loading it on to a new thread, as my main arena was crashing when it was loaded on the same thread as the rest of the program
 		Thread t1 = new Thread(new Runnable() {
 				public void run() {
-					int returnVal = chooser.showSaveDialog(null);
+					int returnVal = chooser.showSaveDialog(null);			//shows the save dialog available in JFileChooser
 					if (returnVal == JFileChooser.APPROVE_OPTION) {
-						File selFile = chooser.getSelectedFile();
+						File selFile = chooser.getSelectedFile();			// return the name of the file selected to save to
 						try {
 							FileOutputStream FileInput = new FileOutputStream(selFile);
-							ObjectOutputStream res = new ObjectOutputStream(FileInput);
-							res.writeObject(arena);
+							ObjectOutputStream res = new ObjectOutputStream(FileInput);		// opens the file to write an object to
+							res.writeObject(arena);											// writes arena to the file
 							res.close();
 							} catch (Exception e) {
-								System.out.println("Cannot save file");}	
+								System.out.println("Cannot save file");}					// if save not done, show in Console
 						}
-
 				}
 		});
-		t1.start();
+		t1.start();	//start thread
 	}
 	
+	
+	/**
+	 * Function to load a previous arena
+	 */
 	private void loadArena() {
-		Thread t2 = new Thread(new Runnable() {
+		Thread t1 = new Thread(new Runnable() {							// loading it on to a new thread, as my main arena was crashing when it was loaded on the same thread as the rest of the program
 				public void run() {
-					int returnVal = chooser.showOpenDialog(null);
-	            	if (returnVal == JFileChooser.APPROVE_OPTION) {
-	            		File selFile = chooser.getSelectedFile();
+					int returnVal = chooser.showOpenDialog(null);		//shows the open dialog available in JFileChooser
+	            	if (returnVal == JFileChooser.APPROVE_OPTION) {		
+	            		File selFile = chooser.getSelectedFile();		// return the name of the file selected to load from
 	            		try {
 	            			
 	            			FileInputStream FileInput = new FileInputStream(selFile);
-	            			ObjectInputStream res = new ObjectInputStream(FileInput);
-	            			arena=(DroneArena)res.readObject();
+	            			ObjectInputStream res = new ObjectInputStream(FileInput);	// opens the file to load an object from
+	            			arena=(DroneArena)res.readObject();							// writes to arena from the file
 	            			res.close();
 	            		} catch (Exception e) {
-	            			System.out.print("Cannot load this file");
+	            			System.out.print("Cannot load this file");					// if save not done, show in Console
 	            		}
 	            	}
 				}
 		});
-		t2.start();
+		t1.start();	// start thread
 	}
 	
 
@@ -323,7 +343,7 @@ public class DroneInterface extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
-		primaryStage.setTitle("RJMs attempt at Moving my Balls");
+		primaryStage.setTitle("30004098 --  Aadil's Illegal Drone Catcher");
 		
 	    BorderPane bp = new BorderPane();
 	    
@@ -345,10 +365,10 @@ public class DroneInterface extends Application {
 	    
 	    timer = new AnimationTimer() {									// set up timer
 	        public void handle(long currentNanoTime) {					// and its action when on
-	        		arena.checkBalls();									// check the angle of all balls
-		            arena.adjustBalls();								// move all balls
+	        		arena.checkdrones();									// check the angle of all drones
+		            arena.adjustdrones();								// move all drones
 		            drawWorld();										// redraw the world
-		            drawStatus();										// indicate where balls are
+		            drawStatus();										// indicate where drones are
 	        }
 	    };
 
@@ -359,37 +379,44 @@ public class DroneInterface extends Application {
 		  
 	    bp.setBottom(setButtons());										// set bottom pane with buttons
 
-	    Scene scene = new Scene(bp, xSize*1.5, ySize*1.2);							// set overall scene
-        bp.prefHeightProperty().bind(scene.heightProperty());
+	    Scene scene = new Scene(bp, xSize*1.5, ySize*1.2);				// set overall scene
+        bp.prefHeightProperty().bind(scene.heightProperty());					
         bp.prefWidthProperty().bind(scene.widthProperty());
 
         primaryStage.setScene(scene);
         primaryStage.show();
-	  
-
 	}
 	
-
-
-
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-	    Application.launch(args);			// launch the GUI
+	    Application.launch(args);										// launch the GUI
 
-	}
-
-	public static int getxSize() {
-		return xSize;
 	}
 	
-	public static int getySize() {
-		return ySize;
+	/**
+	 * 
+	 * @return xSize
+	 */
+	public static int getxSize() {								//	getter & setters 
+		return xSize;											// for arena x length
 	}
-
-	public static double getSPEEDmult() {
-		return SPEEDmult;
+	
+	/**
+	 * 
+	 * @return ySize
+	 */
+	public static int getySize() {
+		return ySize;											// for arena y length 
+	}
+	
+	/**
+	 * 
+	 * @return speedMult
+	 */
+	public static double getSpeedMult() {
+		return speedMult;										// for speed multiplier
 	}
 
 }

@@ -9,49 +9,72 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.ArcType;
 
 /**
- * @author shsmchlr
- *  Class to handle a canvas, used by different GUIs
+ * @StudentNo. 30004098
+ *  Class to handle a canvas, and images within it
  */
 public class MyCanvas {
-	private int xCanvasSize, yCanvasSize;				// constants for relevant sizes
-    private GraphicsContext gc; 
-    private static Image droneIMG, toyHeliIMG, objectIMG; 
-    public static Image backgroundGIF;
+	private int xCanvasSize, yCanvasSize;					// constants for relevant sizes
+    private GraphicsContext gc; 							// name for GraphicsContext within this class
+    private static Image droneIMG, heliIMG, objectIMG; 		// Image for the different filling to portray different types of drones
+    private static Image backgroundGIF;						// Image for the background
 
     /**
-     * onstructor sets up relevant Graphics context and size of canvas
+     * 
      * @param g
-     * @param cs
+     * @param xSize
+     * @param ySize
      */
     public MyCanvas(GraphicsContext g, int xSize, int ySize) {
-    	gc = g;
-    	xCanvasSize = xSize;
+    	gc = g;	
+    	xCanvasSize = xSize;									//getting parameters from arguments
     	yCanvasSize = ySize;
-    	try {
-			droneIMG = new Image(new FileInputStream("src/drone.png"));
-			toyHeliIMG = new Image(new FileInputStream("src/helicopter.png"));
-	        objectIMG = new Image(new FileInputStream("src/square-48.png"));
-	        backgroundGIF = new Image(new FileInputStream("src/background.gif"));
-		} catch (FileNotFoundException e) {
-			System.out.println("Image not load, kys");
-		}
+    	loadImages();											// loadImages function, to loadImages
 
     }
+      
     /**
-     * get size in x of canvas
-     * @return xsize
+     * 
+     * @return xCanvasSize										// getters and setters
      */
     public int getXCanvasSize() {
-    	return xCanvasSize;
+    	return xCanvasSize;										// for x size of canvas
     }
     /**
      * get size of xcanvas in y    
-     * @return ysize
+     * @return yCanvasSize
      */
     public int getYCanvasSize() {
-    	return yCanvasSize;
+    	return yCanvasSize;										// for y size of canvas
     }
-
+    
+    /**
+     * 
+     * @return backgroundGIF
+     */
+    public Image getbackground() {	
+    	return backgroundGIF;									// for background to be used in interface
+    }
+    /**
+     * clear the canvas
+     */
+    
+    /**
+     * loadImages function to load images from src folder
+     */
+    private static void loadImages() {
+    	if (droneIMG != null && heliIMG != null && objectIMG != null && backgroundGIF != null ) { //makes sure only loads the images once
+    		return;
+    	}
+    	try {
+    		droneIMG = new Image(new FileInputStream("src/drone.png"));				//load image of drone from src
+    		heliIMG = new Image(new FileInputStream("src/helicopter.png"));		//load image of helicopter from src
+    		objectIMG = new Image(new FileInputStream("src/square-48.png"));		//load image of object from src
+    		backgroundGIF = new Image(new FileInputStream("src/background.gif"));	//load gif of Background from src
+    	} catch (FileNotFoundException e) {
+    		System.out.println("Images not loading, check src folder");
+    	}
+    }
+    
     /**
      * clear the canvas
      */
@@ -62,9 +85,10 @@ public class MyCanvas {
 	/**
      * drawIt ... draws Obstacle defined by given image at position and size
      * @param i		image
-     * @param x		xposition	in range 0..1
-     * @param y
-     * @param sz	size
+     * @param x		centre of the positions given
+     * @param y	
+     * @param sx	xsize of arena
+     * @param sy	ysize of arena
      */
 	public void drawIt (Image i, double x, double y, double sx, double sy) {
 			// to draw centred at x,y, give top left position and x,y size
@@ -74,28 +98,27 @@ public class MyCanvas {
 
 	
 	/**
-	 * show the ball at position x,y , radius r 
+	 * show the Drone at position x,y , radius r, and different fills depending on type
 	 * @param x
 	 * @param y
 	 * @param rad
-	 * @param col
+	 * @param type
 	 */
     public void showCircle(double x, double y, double rad, char type) {
     	
-    	if (type=='e') {
-    		Image img = toyHeliIMG;
-    		gc.setFill(new ImagePattern(img)); 
+    	if (type=='e') {						//if type is e (enemy drone)
+    		Image img = heliIMG;	
+    		gc.setFill(new ImagePattern(img)); // set image fill to helicopter
     	}
-    	else if (type=='p') {
-    		Image img = droneIMG;
-    		gc.setFill(new ImagePattern(img)); 
+    	else if (type=='p') {					// if type is p (prey drone)
+    		Image img = droneIMG;				
+    		gc.setFill(new ImagePattern(img)); 	// set circle fill to drone image
     	}
-    	else if (type=='o') {
+    	else if (type=='o') {					// if type is o
     		Image img = objectIMG;
-    		gc.setFill(new ImagePattern(img)); 
+    		gc.setFill(new ImagePattern(img)); 	// set circle fill to object image
     	}
-
-        showCircle(x, y, rad);                        // show the circle
+        showCircle(x, y, rad);           // show the circle
     }
 	/**
 	 * show circle in current colour atx,y size rad
@@ -104,7 +127,7 @@ public class MyCanvas {
 	 * @param rad
 	 */
 	public void showCircle(double x, double y, double rad) {
-		gc.fillArc(x-rad, y-rad, rad*2, rad*2, 0, 360, ArcType.ROUND);	// fill circle
+		gc.fillArc(x-rad, y-rad, rad*2, rad*2, 0, 360, ArcType.ROUND);	// fill circle and show it
 	}
 
 }

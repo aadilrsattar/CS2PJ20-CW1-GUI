@@ -6,21 +6,22 @@ package Drone;
 import java.io.Serializable;
 
 /**
- * @author shsmchlr
- *
+ * @StudentNo. 30004098
+ * Initial class from drones, which all other drones extend to
  */
 public abstract class Drone implements Serializable {
 	private static final long serialVersionUID = 1L;
-	protected double x, y, rad;						// position and size of ball
-	protected char type;								// used to set colour
-	static int ballCounter = 0;						// used to give each ball a unique identifier
-	protected int ballID;
-	protected int ID;		// unique identifier for item
-	protected boolean toRemove=false;
+	protected double x, y, rad;							// position and size of drone
+	protected char type;								// used to set type of drone
+	private static int droneCounter = 0;				// used to give each drone a unique identifier
+	protected int DroneID;								// unique identifier for item
+	protected int ID;									// unique identifier for each specific item
+	protected boolean toRemove=false;					// boolean value to identify why to remove 
 	
 	Drone(){};
 	/**
-	 * construct a ball of radius ir at ix,iy
+	 * construct a drone/Drone of radius ir at ix,iy
+	 *
 	 * @param ix
 	 * @param iy
 	 * @param ir
@@ -29,61 +30,71 @@ public abstract class Drone implements Serializable {
 		x = ix;
 		y = iy;
 		rad = ir;
-		ballID = ballCounter++;			// set the identifier and increment class static
-		type='e';
-		ID=0;
+		DroneID = droneCounter++;		// set the identifier and increment class static
+		type='z';						// type needs to be initialised here, otherwise it doesn't show properly
+		ID=0;							// ID, to add to the describeall in arena, for status bar, using toString()
 	}
+	
 	/**
 	 * return x position
 	 * @return
 	 */
 	public double getX() { return x; }
+	
 	/**
 	 * return y position
 	 * @return
 	 */
 	public double getY() { return y; }
+	
 	/**
 	 * return radius of drone
 	 * @return
 	 */
 	public double getRad() { return rad; }
 
-	
 	/**
-	 * return the identity of ball
+	 * return the ID of Drone
 	 * @return
 	 */
-	public int getID() {return ballID; }
-	
+	public int getID() {return DroneID; }
 	
 	/**
-	 * draw a ball into the interface bi
-	 * @param bi
+	 * draw a circle into the interface 
+	 * @param mc
 	 */
-	public void drawBall(MyCanvas mc) {
+	public void drawDrone(MyCanvas mc) {
 		mc.showCircle(x, y, rad, type);
 	}
+	/**
+	 * 
+	 * @return "Drone"
+	 */
 	protected String getStrType() {
-		return "Ball";
+		return "Drone";
 	}
+	
 	/** 
-	 * return string describing ball
+	 * return string describing Drone
 	 */
 	public String toString() {
 		return getStrType()+" "+ ID +" at "+Math.round(x)+", "+Math.round(y);
 	}
+	
 	/**
-	 * abstract method for checking a ball in arena b
+	 * abstract method for checking a Drone in arena b
 	 * @param b
 	 */
-	protected abstract void checkBall(DroneArena b);
+	protected abstract void checkDrone(DroneArena b);
+	
 	/**
-	 * abstract method for adjusting a ball (?moving it)
+	 * abstract method for adjusting a Drone 
 	 */
-	protected abstract void adjustBall();
+	protected abstract void adjustDrone();
+	
+	
 	/**
-	 * is ball at ox,oy size or hitting this ball
+	 * is Drone at ox,oy size or hitting this Drone
 	 * @param ox
 	 * @param oy
 	 * @param or
@@ -91,14 +102,14 @@ public abstract class Drone implements Serializable {
 	 */
 	public boolean hitting(double ox, double oy, double or) {
 		return (ox-x)*(ox-x) + (oy-y)*(oy-y) < (or+rad)*(or+rad);
-	}		// hitting if dist between ball and ox,oy < ist rad + or
+	}		// hitting if dist between Drone and ox,oy < ist rad + or
 	
-	/** is ball hitting the other ball
+	/** is Drone hitting the other Drone
 	 * 
-	 * @param oBall - the other ball
+	 * @param oDrone - the other Drone
 	 * @return true if hitting
 	 */
-	public boolean hitting (Drone oBall) {
-		return hitting(oBall.getX(), oBall.getY(), oBall.getRad());
+	public boolean hitting (Drone oDrone) {
+		return hitting(oDrone.getX(), oDrone.getY(), oDrone.getRad());
 	}
 }

@@ -4,15 +4,15 @@
 package Drone;
 
 /**
- * @author shsmchlr
- * Ball which gets in way of game ball
+ * @StudentNo. 30004098
+ * Drone which gets in way of game Drone
  */
 public class Obstacle extends Drone {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static int ObjectID=0;
+	private static int ObjectID=0;						// ID for right side panel
 	/**
 	 * 
 	 */
@@ -21,6 +21,7 @@ public class Obstacle extends Drone {
 	}
 
 	/**
+	 * Create Obstacle, size ir and arena sizes ix,iy
 	 * @param ix
 	 * @param iy
 	 * @param ir
@@ -31,28 +32,28 @@ public class Obstacle extends Drone {
 		ID=ObjectID++;
 	}
 
-	/* (non-Javadoc)
-	 * @see uk.ac.reading.profrichardmitchell83.Ball#checkBall(uk.ac.reading.profrichardmitchell83.BallArena)
+	/**
+	 * return string defining drone type, here being Obstacle
 	 */
-	@Override
-	protected void checkBall(DroneArena b) {
-		// nowt to do
-
-	}
-
-	/* (non-Javadoc)
-	 * @see uk.ac.reading.profrichardmitchell83.Ball#adjustBall()
-	 */
-	@Override
-	protected void adjustBall() {
-		// nowt to do
-
-	}
 	protected String getStrType() {
 		return "Obstacle";
 	}	
-	
+
+	/**
+	 * resetting ID when making new arena
+	 */
 	public static void resetID() {
 		ObjectID=0;
 	}
+	
+	
+	/**
+	 * These following two are not needed here, as this 
+	 * doesn't move, but it does inherits it from Drone
+	 */
+	protected void checkDrone(DroneArena b) {}
+
+	protected void adjustDrone() {}
+	
+
 }

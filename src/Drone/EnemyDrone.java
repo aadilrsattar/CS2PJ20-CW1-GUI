@@ -4,16 +4,14 @@
 package Drone;
 
 /**
- * @author shsmchlr
- *
+ * @StudentNo. 30004098
+ *	This extending class of Drone is a drone that can attack a PreyDrone, but generally just bounces around
  */
 public class EnemyDrone extends Drone {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private static int EnemyDroneID=0;
-	double bAngle, bSpeed;			// angle and speed of travel
+
+	private static final long serialVersionUID = 1L;	
+	private static int EnemyDroneID=0;					// ID for right side panel
+	private double bAngle, bSpeed;						// angle and speed of travel
 	/**
 	 * 
 	 */
@@ -21,7 +19,7 @@ public class EnemyDrone extends Drone {
 		// TODO Auto-generated constructor stub
 	}
 
-	/** Create game Drone, size ir ay ix,iy, moving at angle ia and speed is
+	/** Create EnemyDrone, size ir, arena sizes ix,iy, moving at angle ia and speed is
 	 * @param ix
 	 * @param iy
 	 * @param ir
@@ -33,44 +31,48 @@ public class EnemyDrone extends Drone {
 		bAngle = ia;
 		bSpeed= is;
 		ID=EnemyDroneID++;
+		type='e';	
 	}
 
 	/**
-	 * checkball - change angle of travel if hitting wall or another Drone
+	 * checkDrone - change angle of travel if hitting wall or another Drone
 	 * @param b   DroneArena
 	 */
 	@Override
-	protected void checkBall(DroneArena b) {
-		bAngle = b.CheckBallAngle(x, y, rad, bAngle, ballID, this);
+	protected void checkDrone(DroneArena b) {
+		bAngle = b.CheckdroneAngle(x, y, rad, bAngle, DroneID, this);
 	}
 
 	/**
-	 * adjustBall
-	 * Here, move Drone depending on speed and angle
+	 * adjustDrone
+	 * Here, move Drone depending on speed, angle and position
 	 */
 	@Override
-	protected void adjustBall() {
-		double radAngle = bAngle*Math.PI/180;		// put angle in radians
+	protected void adjustDrone() {
+		double radAngle = bAngle*Math.PI/180;					// put angle in radians
 		
-		if (x<=0+rad) x=x+rad;
-		if (x>DroneInterface.getxSize()-2) x=x-(rad+2);
+		if (x<0) x=x+rad;										//these are used to correct positions of drones that go off canvas 
+		if (x>DroneInterface.getxSize()-rad+3) x=x-(rad+5);		//done by pushing them back in to boundaries of arena
 		
-		if (y<=0+rad) y=y+rad;
-		if (y>DroneInterface.getySize()-2) y=y-rad+2;
+		if (y<0) y=y+rad;								
+		if (y>DroneInterface.getySize()-rad+3) y=y-rad+5;
 		
 		else {
-				double multiplier = DroneInterface.getSPEEDmult();
+				double multiplier = DroneInterface.getSpeedMult();
 				x += bSpeed * Math.cos(radAngle) * multiplier;		// new X position
 				y += bSpeed * Math.sin(radAngle) * multiplier;		// new Y position
 		}
 	}
 	/**
-	 * return string defining Drone type
+	 * return string defining drone type, here being police helicopter
 	 */
 	protected String getStrType() {
-		return "Enemy Drone";
+		return "Police Helicopter";
 	}
 	
+	/**
+	 * resetting ID when making new arena
+	 */
 	public static void resetID() {
 		EnemyDroneID=0;
 	}
