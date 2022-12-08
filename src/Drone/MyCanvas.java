@@ -15,7 +15,7 @@ import javafx.scene.shape.ArcType;
 public class MyCanvas {
 	private int xCanvasSize, yCanvasSize;					// constants for relevant sizes
     private GraphicsContext gc; 							// name for GraphicsContext within this class
-    private static Image droneIMG, heliIMG, objectIMG; 		// Image for the different filling to portray different types of drones
+    private static Image droneIMG, heliIMG, objectIMG, birdIMG; 		// Image for the different filling to portray different types of drones
     private static Image backgroundGIF;						// Image for the background
 
     /**
@@ -24,7 +24,7 @@ public class MyCanvas {
      * @param xSize
      * @param ySize
      */
-    public MyCanvas(GraphicsContext g, int xSize, int ySize) {
+    MyCanvas(GraphicsContext g, int xSize, int ySize) {
     	gc = g;	
     	xCanvasSize = xSize;									//getting parameters from arguments
     	yCanvasSize = ySize;
@@ -62,7 +62,7 @@ public class MyCanvas {
      * loadImages function to load images from src folder
      */
     private static void loadImages() {
-    	if (droneIMG != null && heliIMG != null && objectIMG != null && backgroundGIF != null ) { //makes sure only loads the images once
+    	if (droneIMG != null && heliIMG != null && objectIMG != null && backgroundGIF != null && birdIMG != null ) { //makes sure only loads the images once
     		return;
     	}
     	try {
@@ -70,6 +70,7 @@ public class MyCanvas {
     		heliIMG = new Image(new FileInputStream("src/helicopter.png"));		//load image of helicopter from src
     		objectIMG = new Image(new FileInputStream("src/square-48.png"));		//load image of object from src
     		backgroundGIF = new Image(new FileInputStream("src/background.gif"));	//load gif of Background from src
+    		birdIMG = new Image(new FileInputStream("src/birds.png"));				//load png of birds from src
     	} catch (FileNotFoundException e) {
     		System.out.println("Images not loading, check src folder");
     	}
@@ -117,6 +118,10 @@ public class MyCanvas {
     	else if (type=='o') {					// if type is o
     		Image img = objectIMG;
     		gc.setFill(new ImagePattern(img)); 	// set circle fill to object image
+    	}
+    	else if (type=='b') {
+    		Image img = birdIMG;
+    		gc.setFill(new ImagePattern(img));
     	}
         showCircle(x, y, rad);           // show the circle
     }

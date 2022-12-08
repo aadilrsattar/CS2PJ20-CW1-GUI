@@ -205,11 +205,20 @@ public class DroneInterface extends Application {
 	       }
 	    });
 	    
-	    Button btnOAdd = new Button("New Obstacle");				// now button for stop
+	    Button btnOAdd = new Button("New Obstacle");				// now button for adding obstacle
 	    btnOAdd.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override
 	        public void handle(ActionEvent event) {
 	           	arena.addObject();								// and its action to addObject
+	           	drawWorld();									// then draw world with the update
+	       }
+	    });
+	    
+	    Button btnBAdd = new Button("New Bird ");				// now button for adding Bird
+	    btnBAdd.setOnAction(new EventHandler<ActionEvent>() {
+	        @Override
+	        public void handle(ActionEvent event) {
+	           	arena.addBirds();								// and its action to addBirds
 	           	drawWorld();									// then draw world with the update
 	       }
 	    });
@@ -232,7 +241,7 @@ public class DroneInterface extends Application {
 	       }
 	    });
 	    														// now add these buttons + labels to a HBox
-	    return new HBox(new Label("Run: "), btnStart, btnStop, new Label(" Add: "), btnEAdd, btnPAdd, btnOAdd, new Label("Speed adjust: "), btnSPEEDplus, btnSPEEDminus);
+	    return new HBox(new Label("Run: "), btnStart, btnStop, new Label(" Add: "), btnEAdd, btnPAdd, btnOAdd,btnBAdd, new Label(" Speed adjust: "), btnSPEEDplus, btnSPEEDminus);
 	}
 
 
@@ -275,7 +284,8 @@ public class DroneInterface extends Application {
 					    arena.clearDrones();									// function called to delete all drones from Array
 						EnemyDrone.resetID();									// reset all ID of drones used in right pane
 						PreyDrone.resetID();									
-						Obstacle.resetID();										
+						Obstacle.resetID();
+						Birds.resetID();
 					    arena = new DroneArena(xSize, ySize);					// set up arena
 					    drawWorld();											// shows updated arena
 					}
@@ -352,11 +362,11 @@ public class DroneInterface extends Application {
 	    bp.setTop(setMenu());											// put menu at the top
 
 	    Group root = new Group();										// create group with canvas
-	    Canvas canvas = new Canvas( getxSize(), ySize );
+	    Canvas canvas = new Canvas( getxSize(), getySize() );
 	    root.getChildren().add( canvas );
 	    bp.setLeft(root);												// load canvas to left area
 	
-	    mc = new MyCanvas(canvas.getGraphicsContext2D(), xSize, ySize);
+	    mc = new MyCanvas(canvas.getGraphicsContext2D(), getxSize(), getySize());
 
 	    setMouseEvents(canvas);											// set up mouse events
 
@@ -379,7 +389,7 @@ public class DroneInterface extends Application {
 		  
 	    bp.setBottom(setButtons());										// set bottom pane with buttons
 
-	    Scene scene = new Scene(bp, xSize*1.5, ySize*1.2);				// set overall scene
+	    Scene scene = new Scene(bp, getxSize()*1.5, getySize()*1.2);				// set overall scene
         bp.prefHeightProperty().bind(scene.heightProperty());					
         bp.prefWidthProperty().bind(scene.widthProperty());
 

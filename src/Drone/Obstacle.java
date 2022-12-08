@@ -13,12 +13,6 @@ public class Obstacle extends Drone {
 	 */
 	private static final long serialVersionUID = 1L;
 	private static int ObjectID=0;						// ID for right side panel
-	/**
-	 * 
-	 */
-	public Obstacle() {
-		// TODO Auto-generated constructor stub
-	}
 
 	/**
 	 * Create Obstacle, size ir and arena sizes ix,iy

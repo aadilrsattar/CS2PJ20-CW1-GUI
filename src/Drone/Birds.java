@@ -5,12 +5,12 @@ package Drone;
 
 /**
  * @StudentNo. 30004098
- *	This extending class of Drone is a drone that can attack a PreyDrone, but generally just bounces around
+ *	This extending class of Drone is a bird that just annoys everyone
  */
-public class EnemyDrone extends Drone {
+public class Birds extends Drone {
 
 	private static final long serialVersionUID = 1L;	
-	private static int EnemyDroneID=0;					// ID for right side panel
+	private static int BirdsID=0;					// ID for right side panel
 	private double bAngle, bSpeed;						// angle and speed of travel
 
 	/** Create EnemyDrone, size ir, arena sizes ix,iy, moving at angle ia and speed is
@@ -20,12 +20,12 @@ public class EnemyDrone extends Drone {
 	 * @param ia
 	 * @param is
 	 */
-	public EnemyDrone(double ix, double iy, double ir, double ia, double is) {
+	public Birds(double ix, double iy, double ir, double ia, double is) {
 		super(ix, iy, ir);
 		bAngle = ia;
 		bSpeed= is;
-		ID=EnemyDroneID++;
-		type='e';	
+		ID=BirdsID++;
+		type='b';	
 	}
 
 	/**
@@ -58,17 +58,17 @@ public class EnemyDrone extends Drone {
 		}
 	}
 	/**
-	 * return string defining drone type, here being police helicopter
+	 * return string defining drone type, here being Bird
 	 */
 	protected String getStrType() {
-		return "Police Helicopter";
+		return "Bird";
 	}
 	
 	/**
 	 * resetting ID when making new arena
 	 */
 	public static void resetID() {
-		EnemyDroneID=0;
+		BirdsID=0;
 	}
 	
 }

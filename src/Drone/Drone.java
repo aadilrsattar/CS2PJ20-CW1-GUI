@@ -16,7 +16,7 @@ public abstract class Drone implements Serializable {
 	private static int droneCounter = 0;				// used to give each drone a unique identifier
 	protected int DroneID;								// unique identifier for item
 	protected int ID;									// unique identifier for each specific item
-	protected boolean toRemove=false;					// boolean value to identify why to remove 
+	protected boolean toRemove=false;					// boolean value to identify what drone to remove 
 	
 	Drone(){};
 	/**
