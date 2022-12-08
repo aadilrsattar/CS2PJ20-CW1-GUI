@@ -10,10 +10,10 @@ package Drone;
 public class Birds extends Drone {
 
 	private static final long serialVersionUID = 1L;	
-	private static int BirdsID=0;					// ID for right side panel
+	private static int BirdsID=0;						// ID for right side pane
 	private double bAngle, bSpeed;						// angle and speed of travel
 
-	/** Create EnemyDrone, size ir, arena sizes ix,iy, moving at angle ia and speed is
+	/** Create Birds, size ir, arena sizes ix,iy, moving at angle ia and speed is
 	 * @param ix
 	 * @param iy
 	 * @param ir
@@ -22,10 +22,10 @@ public class Birds extends Drone {
 	 */
 	public Birds(double ix, double iy, double ir, double ia, double is) {
 		super(ix, iy, ir);
-		bAngle = ia;
-		bSpeed= is;
-		ID=BirdsID++;
-		type='b';	
+		bAngle = ia;		//angle of drone
+		bSpeed= is;			//speed of drone
+		ID=BirdsID++;		//ID for right side pane
+		type='b';			//type of drone
 	}
 
 	/**

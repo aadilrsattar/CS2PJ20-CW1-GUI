@@ -5,16 +5,16 @@ package Drone;
 
 /**
  * @StudentNo. 30004098
- * This extending class of Drone is a drone that can die when touched by EnemyDrone
+ * This extending class of Drone is a drone that can die when touched by PoliceHelicopter
  */
-public class PreyDrone extends Drone{
+public class IllegalDrone extends Drone{
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static int PreyDroneID=0;					// ID for right side panel
-	private double bAngle, bSpeed;						// angle and speed of travel
+	private static int IllegalDroneID=0;					// ID for right side pane
+	private double bAngle, bSpeed;							// angle and speed of travel
 
 	/** Create Prey Drone, size ir, arena sizes ix,iy, moving at angle ia and speed is
 	 * @param ix
@@ -23,12 +23,12 @@ public class PreyDrone extends Drone{
 	 * @param ia
 	 * @param is
 	 */
-	public PreyDrone(double ix, double iy, double ir, double ia, double is) {
+	public IllegalDrone(double ix, double iy, double ir, double ia, double is) {
 		super(ix, iy, ir);
-		type = 'p';
-		bAngle = ia;
-		bSpeed = is;
-		ID=PreyDroneID++;
+		bAngle = ia;			// angle
+		bSpeed = is;			// speed
+		ID=IllegalDroneID++;	// ID for right pane
+		type = 'i';				// type of drone
 	}
 
 	/** 
@@ -71,6 +71,6 @@ public class PreyDrone extends Drone{
 	 * resetting ID when making new arena
 	 */
 	public static void resetID() {
-		PreyDroneID=0;
+		IllegalDroneID=0;
 	}
 }

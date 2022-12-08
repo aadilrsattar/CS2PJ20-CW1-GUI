@@ -13,10 +13,11 @@ import javafx.scene.shape.ArcType;
  *  Class to handle a canvas, and images within it
  */
 public class MyCanvas {
-	private int xCanvasSize, yCanvasSize;					// constants for relevant sizes
-    private GraphicsContext gc; 							// name for GraphicsContext within this class
-    private static Image droneIMG, heliIMG, objectIMG, birdIMG; 		// Image for the different filling to portray different types of drones
-    private static Image backgroundGIF;						// Image for the background
+	private int xCanvasSize, yCanvasSize;							// constants for relevant sizes
+    private GraphicsContext gc; 									// name for GraphicsContext within this class
+    private static Image droneIMG, heliIMG, objectIMG, birdIMG; 	// Image for the different filling to portray different types of drones
+    private static Image backgroundGIF;								// Image for the background
+    
 
     /**
      * 
@@ -29,6 +30,8 @@ public class MyCanvas {
     	xCanvasSize = xSize;									//getting parameters from arguments
     	yCanvasSize = ySize;
     	loadImages();											// loadImages function, to loadImages
+    	
+
 
     }
       
@@ -67,7 +70,7 @@ public class MyCanvas {
     	}
     	try {
     		droneIMG = new Image(new FileInputStream("src/drone.png"));				//load image of drone from src
-    		heliIMG = new Image(new FileInputStream("src/helicopter.png"));		//load image of helicopter from src
+    		heliIMG = new Image(new FileInputStream("src/helicopter.png"));			//load image of helicopter from src
     		objectIMG = new Image(new FileInputStream("src/square-48.png"));		//load image of object from src
     		backgroundGIF = new Image(new FileInputStream("src/background.gif"));	//load gif of Background from src
     		birdIMG = new Image(new FileInputStream("src/birds.png"));				//load png of birds from src
@@ -107,21 +110,21 @@ public class MyCanvas {
 	 */
     public void showCircle(double x, double y, double rad, char type) {
     	
-    	if (type=='e') {						//if type is e (enemy drone)
+    	if (type=='h') {						//if type is h (helicopter)
     		Image img = heliIMG;	
     		gc.setFill(new ImagePattern(img)); // set image fill to helicopter
     	}
-    	else if (type=='p') {					// if type is p (prey drone)
+    	else if (type=='i') {					// if type is i (illegal drone)
     		Image img = droneIMG;				
     		gc.setFill(new ImagePattern(img)); 	// set circle fill to drone image
     	}
-    	else if (type=='o') {					// if type is o
+    	else if (type=='o') {					// if type is o(object)
     		Image img = objectIMG;
     		gc.setFill(new ImagePattern(img)); 	// set circle fill to object image
     	}
-    	else if (type=='b') {
+    	else if (type=='b') {					// if type is b(bird)
     		Image img = birdIMG;
-    		gc.setFill(new ImagePattern(img));
+    		gc.setFill(new ImagePattern(img));	// set circle fill to bird image
     	}
         showCircle(x, y, rad);           // show the circle
     }

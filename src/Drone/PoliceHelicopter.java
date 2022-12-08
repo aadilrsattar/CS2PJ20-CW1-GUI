@@ -5,27 +5,27 @@ package Drone;
 
 /**
  * @StudentNo. 30004098
- *	This extending class of Drone is a drone that can attack a PreyDrone, but generally just bounces around
+ *	This extending class of Drone is a drone that can attack a IllegalDrone, but generally just bounces around
  */
-public class EnemyDrone extends Drone {
+public class PoliceHelicopter extends Drone {
 
 	private static final long serialVersionUID = 1L;	
-	private static int EnemyDroneID=0;					// ID for right side panel
-	private double bAngle, bSpeed;						// angle and speed of travel
+	private static int PoliceHelicopterID=0;					// ID for right side pane
+	private double bAngle, bSpeed;								// angle and speed of travel
 
-	/** Create EnemyDrone, size ir, arena sizes ix,iy, moving at angle ia and speed is
+	/** Create PoliceHelicopter, size ir, arena sizes ix,iy, moving at angle ia and speed is
 	 * @param ix
 	 * @param iy
 	 * @param ir
 	 * @param ia
 	 * @param is
 	 */
-	public EnemyDrone(double ix, double iy, double ir, double ia, double is) {
+	public PoliceHelicopter(double ix, double iy, double ir, double ia, double is) {
 		super(ix, iy, ir);
-		bAngle = ia;
-		bSpeed= is;
-		ID=EnemyDroneID++;
-		type='e';	
+		bAngle = ia;				//angle of drone
+		bSpeed= is;					//speed of drone	
+		ID=PoliceHelicopterID++;	//ID for right pane
+		type='h';					//type of drone
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class EnemyDrone extends Drone {
 	 * resetting ID when making new arena
 	 */
 	public static void resetID() {
-		EnemyDroneID=0;
+		PoliceHelicopterID=0;
 	}
 	
 }

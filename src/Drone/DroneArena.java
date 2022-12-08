@@ -14,7 +14,6 @@ import java.util.Random;
  */
 public class DroneArena implements Serializable {	
 	private static final long serialVersionUID = 1L;
-
 	Random randomGenerator;
  
 	
@@ -30,8 +29,8 @@ public class DroneArena implements Serializable {
 		xSize = xS;									//imports xSize and ySizefrom arena		
 		ySize = yS;
 		allDrones = new ArrayList<Drone>();			// list of all drones, initially empty
-		addEnemyDrone();							// add Enemy Drone
-		addPreyDrone();								// add Prey Drone
+		addPoliceHelicopter();							// add Police Helicopter
+		addIllegalDrone();								// add Illegal Drone
 		addObject();								// add object
 		addBirds();									// add birds
 	}
@@ -118,9 +117,9 @@ public class DroneArena implements Serializable {
 			for (Drone b : allDrones) 
 				if (b.getID() != notID && b.hitting(x, y, rad)) {
 					ans = 180*Math.atan2(y-b.getY(), x-b.getX())/Math.PI;
-					if (b.getClass()==EnemyDrone.class && edo.getClass()==PreyDrone.class) {
-						edo.toRemove=true;
-						//scoreAdd();
+					if (b.getClass()==PoliceHelicopter.class && edo.getClass()==IllegalDrone.class) {	// if collision between Police Helicopter and the other is 
+						edo.toRemove=true;																// Illegal drone it sets the other drone to be removed
+						DroneInterface.caughtAdd();														// and adds one to the caught
 					}
 					bool=false;
 				}
@@ -151,9 +150,9 @@ public class DroneArena implements Serializable {
 	}
 	
 	/**
-	 * Function to adding an Enemy Drone
+	 * Function to adding an Police Helicopter
 	 */
-	public void addEnemyDrone() {
+	public void addPoliceHelicopter() {
 		randomGenerator = new Random(); 
 		double x,y,ang,r=20;
 		int counter=0;
@@ -163,13 +162,13 @@ public class DroneArena implements Serializable {
 		ang = randomGenerator.nextInt(360);
 		counter++;
 		}while (checkplace(x,y,r)&&counter<100);			// Checks if there is anything in that position
-		allDrones.add(new EnemyDrone(x, y, r, ang, 5));		// Adds if there isn't anything in those coordinates
+		allDrones.add(new PoliceHelicopter(x, y, r, ang, 5));		// Adds if there isn't anything in those coordinates
 	}
 	
 	/**
-	 * Function to adding a Prey Drone
+	 * Function to adding a Illegal Drone
 	 */
-	public void addPreyDrone() {
+	public void addIllegalDrone() {
 		randomGenerator = new Random(); 
 		double x,y,ang,r=12;
 		int counter=0;
@@ -179,7 +178,7 @@ public class DroneArena implements Serializable {
 		ang = randomGenerator.nextInt(360);
 		counter++;
 		}while (checkplace(x,y,r)&&counter<100);			// Checks if there is anything in that position
-		allDrones.add(new PreyDrone(x, y, r, ang, 8));		// Adds if there isn't anything in those coordinates
+		allDrones.add(new IllegalDrone(x, y, r, ang, 8));		// Adds if there isn't anything in those coordinates
 	}
 	
 	/**
@@ -187,7 +186,7 @@ public class DroneArena implements Serializable {
 	 */
 	public void addObject() {
 		randomGenerator = new Random(); 
-		double x,y,r=20;
+		double x,y,r=10;
 		int counter=0;
 		do {
 		x = randomGenerator.nextInt(xSize);					// Makes random x and y value				
@@ -201,7 +200,7 @@ public class DroneArena implements Serializable {
 	 */
 	public void addBirds() {
 		randomGenerator = new Random(); 
-		double x,y,ang,r=12;
+		double x,y,ang,r=10;
 		int counter=0;
 		do {
 		x = randomGenerator.nextInt(xSize);					// Makes random x and y value
@@ -209,6 +208,6 @@ public class DroneArena implements Serializable {
 		ang = randomGenerator.nextInt(360);
 		counter++;
 		}while (checkplace(x,y,r)&&counter<100);			// Checks if there is anything in that position
-		allDrones.add(new Birds(x, y, r, ang, 5));		// Adds if there isn't anything in those coordinates
+		allDrones.add(new Birds(x, y, r, ang, 5));			// Adds if there isn't anything in those coordinates
 	}
 }

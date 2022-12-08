@@ -31,6 +31,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -51,22 +52,7 @@ public class DroneInterface extends Application {
 	private static int xSize=500;								// The xSize initially
 	private static int ySize=500;								// The ySize initially
 	private static double speedMult=1;							// Speed Multiplier, for increasing speed
-	
-	public DroneInterface() {
-    	chooser=new JFileChooser("/");							// This is a filter for loading files
-    	FileFilter filter = new FileFilter() {					
-    		@Override
-    		public boolean accept(File f) {
-    		if (f.getAbsolutePath().endsWith(".lom")) return true;	// It makes sure the file has the right extension
-    		if (f.isDirectory()) return true;
-    		return false;
-    		}
-    		public String getDescription() {
-    		return "lom";
-    		}
-    	};
-    	chooser.setFileFilter(filter);
-	}
+	private static int caught=0;									// integer for how many Illegal Drones have been caught by Police
 	
 	/**
 	 * function to show in a box ABout the programme
@@ -75,7 +61,7 @@ public class DroneInterface extends Application {
 	    Alert alert = new Alert(AlertType.INFORMATION);				// define what box is
 	    alert.setTitle("About");									// say is About
 	    alert.setHeaderText(null);
-	    alert.setContentText("This Simulation contains Police Drones chasing Illegal Drone, but pretty dumbly.");		// give text
+	    alert.setContentText("This Simulation contains Police Drones trying to catch Illegal Drones, with some dumb birds and bright red obstacles :)");		// give text
 	    alert.showAndWait();										// show box and wait for user to close
 	}
 	
@@ -192,7 +178,7 @@ public class DroneInterface extends Application {
 	    btnEAdd.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override
 	        public void handle(ActionEvent event) {
-	           	arena.addEnemyDrone();								// and its action to add Enemy drone 
+	           	arena.addPoliceHelicopter();								// and its action to add Police Helicopter
 	           	drawWorld();										// then draw world with the update
 	       }
 	    });
@@ -200,7 +186,7 @@ public class DroneInterface extends Application {
 	    btnPAdd.setOnAction(new EventHandler<ActionEvent>() {
 	        @Override
 	        public void handle(ActionEvent event) {
-	           	arena.addPreyDrone();								// and its action to add PreyDrone
+	           	arena.addIllegalDrone();								// and its action to add IllegalDrone
 	           	drawWorld();										// then draw world with the update
 	       }
 	    });
@@ -260,11 +246,87 @@ public class DroneInterface extends Application {
 	public void drawStatus() {
 		rtPane.getChildren().clear();					// clear rtpane
 		ArrayList<String> allBs = arena.describeAll();
+		String a=("Drones Caught: " + caught);			// add label of the caught drones to top of right pane
+		Label b= new Label(a);
+		rtPane.getChildren().add(b);
 		for (String s : allBs) {
-			Label l = new Label(s); 		// turn description into a label
+			Label l = new Label(s); 		// turn description of each drone into a label
 			rtPane.getChildren().add(l);	// add label to pane
 		}	
 	}
+	
+	public static void caughtAdd() {
+		caught+=1;												// to keep count of drones caught by police
+	}
+	
+	
+	public DroneInterface() {
+		chooser=new JFileChooser("/");							// This is a filter for loading files
+		FileFilter filter = new FileFilter() {					
+			@Override
+			public boolean accept(File f) {
+			if (f.getAbsolutePath().endsWith(".lom")) return true;	// It makes sure the file has the right extension
+			if (f.isDirectory()) return true;						// returns
+			return false;
+			}
+			public String getDescription() {
+			return "lom";
+			}
+		};
+		chooser.setFileFilter(filter);
+	}
+
+	/* (non-Javadoc)
+	 * @see javafx.application.Application#start(javafx.stage.Stage)
+	 */
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		// TODO Auto-generated method stub
+		primaryStage.setTitle("30004098 -- Aadil's Illegal Drone Catcher");		// Title of the JavaFX GUI 
+		
+	    BorderPane bp = new BorderPane();
+	    
+	    bp.setPadding(new Insets(10, 20, 10, 20));
+	
+	    bp.setTop(setMenu());											// put menu at the top
+	
+	    Group root = new Group();										// create group with canvas
+	    Canvas canvas = new Canvas( getxSize(), getySize() );
+	    root.getChildren().add( canvas );
+	    bp.setLeft(root);												// load canvas to left area
+	
+	    mc = new MyCanvas(canvas.getGraphicsContext2D(), getxSize(), getySize());
+	
+	    setMouseEvents(canvas);											// set up mouse events
+	
+	    arena = new DroneArena(xSize, ySize);							// set up arena
+	    drawWorld();
+	    
+	    timer = new AnimationTimer() {									// set up timer
+	        public void handle(long currentNanoTime) {					// and its action when on
+	        		arena.checkdrones();									// check the angle of all drones
+		            arena.adjustdrones();								// move all drones
+		            drawWorld();										// redraw the world
+		            drawStatus();										// indicate where drones are
+	        }
+	    };
+	
+	    rtPane = new VBox();											// set vBox on right to list items
+		rtPane.setAlignment(Pos.TOP_LEFT);								// set alignment
+		rtPane.setPadding(new Insets(5, 75, 75, 5));					// padding
+		bp.setRight(rtPane);											// add rtPane to borderpane right
+		  
+	    bp.setBottom(setButtons());										// set bottom pane with buttons
+	
+	    Scene scene = new Scene(bp, getxSize()*1.5, getySize()*1.2);				// set overall scene
+	    bp.prefHeightProperty().bind(scene.heightProperty());						
+	    bp.prefWidthProperty().bind(scene.widthProperty());
+	    
+	    primaryStage.getIcons().add(new Image(new FileInputStream("src/helicopter.png")));		// changes the icon
+	    primaryStage.setScene(scene);
+	    primaryStage.show();
+	}
+
 	/**
 	 * function to load a new arena 
 	 */
@@ -282,8 +344,8 @@ public class DroneInterface extends Application {
 						xSize=xNew;												// If the parameters work
 						ySize=yNew;												// then add xNew and yNew as new Size
 					    arena.clearDrones();									// function called to delete all drones from Array
-						EnemyDrone.resetID();									// reset all ID of drones used in right pane
-						PreyDrone.resetID();									
+						PoliceHelicopter.resetID();									// reset all ID of drones used in right pane
+						IllegalDrone.resetID();									
 						Obstacle.resetID();
 						Birds.resetID();
 					    arena = new DroneArena(xSize, ySize);					// set up arena
@@ -347,56 +409,6 @@ public class DroneInterface extends Application {
 	}
 	
 
-	/* (non-Javadoc)
-	 * @see javafx.application.Application#start(javafx.stage.Stage)
-	 */
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		// TODO Auto-generated method stub
-		primaryStage.setTitle("30004098 --  Aadil's Illegal Drone Catcher");
-		
-	    BorderPane bp = new BorderPane();
-	    
-	    bp.setPadding(new Insets(10, 20, 10, 20));
-
-	    bp.setTop(setMenu());											// put menu at the top
-
-	    Group root = new Group();										// create group with canvas
-	    Canvas canvas = new Canvas( getxSize(), getySize() );
-	    root.getChildren().add( canvas );
-	    bp.setLeft(root);												// load canvas to left area
-	
-	    mc = new MyCanvas(canvas.getGraphicsContext2D(), getxSize(), getySize());
-
-	    setMouseEvents(canvas);											// set up mouse events
-
-	    arena = new DroneArena(xSize, ySize);								// set up arena
-	    drawWorld();
-	    
-	    timer = new AnimationTimer() {									// set up timer
-	        public void handle(long currentNanoTime) {					// and its action when on
-	        		arena.checkdrones();									// check the angle of all drones
-		            arena.adjustdrones();								// move all drones
-		            drawWorld();										// redraw the world
-		            drawStatus();										// indicate where drones are
-	        }
-	    };
-
-	    rtPane = new VBox();											// set vBox on right to list items
-		rtPane.setAlignment(Pos.TOP_LEFT);								// set alignment
-		rtPane.setPadding(new Insets(5, 75, 75, 5));					// padding
- 		bp.setRight(rtPane);											// add rtPane to borderpane right
-		  
-	    bp.setBottom(setButtons());										// set bottom pane with buttons
-
-	    Scene scene = new Scene(bp, getxSize()*1.5, getySize()*1.2);				// set overall scene
-        bp.prefHeightProperty().bind(scene.heightProperty());					
-        bp.prefWidthProperty().bind(scene.widthProperty());
-
-        primaryStage.setScene(scene);
-        primaryStage.show();
-	}
-	
 	/**
 	 * @param args
 	 */
@@ -428,5 +440,6 @@ public class DroneInterface extends Application {
 	public static double getSpeedMult() {
 		return speedMult;										// for speed multiplier
 	}
+	
 
 }

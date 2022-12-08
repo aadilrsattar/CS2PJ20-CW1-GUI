@@ -12,7 +12,7 @@ public class Obstacle extends Drone {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static int ObjectID=0;						// ID for right side panel
+	private static int ObjectID=0;						// ID for right side pane
 
 	/**
 	 * Create Obstacle, size ir and arena sizes ix,iy
@@ -22,8 +22,8 @@ public class Obstacle extends Drone {
 	 */
 	public Obstacle(double ix, double iy, double ir) {
 		super(ix, iy, ir);
-		type = 'o';
-		ID=ObjectID++;
+		ID=ObjectID++; 		//ID for right side pane
+		type = 'o';			//type of drone
 	}
 
 	/**
